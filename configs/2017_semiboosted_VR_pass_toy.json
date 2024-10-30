@@ -8,7 +8,7 @@
           "COLOR":1,
           "TYPE":"DATA",
           "TITLE":"data_obs",
-          "LOC":"./JetHT_Histograms_VR_pass_toy.root:HIST"
+          "LOC":"PATH/JetHT_Histograms_VR_pass_toy.root:HIST"
        },
        "TTbar":{
           "SYSTEMATICS":[
