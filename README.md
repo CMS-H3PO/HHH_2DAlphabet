@@ -83,7 +83,9 @@ The toy data is generated using the `generateToys.py` script which imports the t
 python generateToys.py -y ${YEAR} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root
 ```
 Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions.
-
+```
+mv JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
+```
 The toy data in the validation regions is used in `HHH_boosted_VR_pass_toy.py` and `HHH_semiboosted_VR_pass_toy.py` as a sort of sanity check (closure test) to check whether the toy data fits converge to parameter values similar to those used in the generation of the toy data
 ```
 python -u HHH_boosted_VR_pass_toy.py -y ${YEAR} |& tee ${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log

@@ -21,9 +21,9 @@ if __name__ == '__main__':
 
         jsonConfig   = 'configs/{0}.json'.format(working_area)
 
-        #test_make(working_area,jsonConfig)
+        test_make(working_area,jsonConfig)
 
-        for polyOrder in ["2","3"]:
+        for polyOrder in ["0","1","2","3"]:
             if options.year == "2017":
                 if polyOrder in ["1"]:
                     test_fit(working_area,polyOrder,strategy=2, rMin=-1, rMax=1)
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                 test_GoF_plot(working_area,polyOrder)
                 test_limit(working_area,polyOrder,'%s/runConfig.json'%working_area,blind=True,strategy=2,extra="--rMin=-1 --rMax=5")
 
-        #test_FTest(working_area,"0","1")
+        test_FTest(working_area,"0","1")
         test_FTest(working_area,"1","2")
         if options.year!="2017":
             test_FTest(working_area,"2","3")

@@ -213,14 +213,14 @@ def test_make(working_area,jsonConfig,findreplace={}):
     twoD.Save()
     
 
-def test_fit(working_area,polyOrder,sigName=None,strategy=0,rMin=-1,rMax=10,setParams={},extra=''):
+def test_fit(working_area,polyOrder,sigName=None,strategy=0,rs=0,rMin=-1,rMax=10,setParams={},extra=''):
     twoD = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
     if sigName is not None:
         subset = twoD.ledger.select(_select_bkg, polyOrder, sigName)
     else:
         subset = twoD.ledger.select(_select_bkg, polyOrder)
     twoD.MakeCard(subset, '{0}_area'.format(polyOrder))
-    twoD.MLfit('{0}_area'.format(polyOrder),strategy=strategy,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
+    twoD.MLfit('{0}_area'.format(polyOrder),strategy=strategy,rs=rs,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
 
 def test_limit(working_area,orderSR,json_file,blind=True,strategy=0,extra=''):
     '''Perform a blinded limit. To be blinded, the Combine algorithm (via option `--run blind`)
