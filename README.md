@@ -2,7 +2,6 @@
 
 The following steps need to be done only once for the initial installation
 ```
-cd ../..
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=el9_amd64_gcc12
 cmsrel CMSSW_14_1_0_pre4
@@ -19,6 +18,9 @@ source twoD-env/bin/activate
 git clone -b el9_plotting --depth 1 git@github.com:CMS-H3PO/2DAlphabet.git
 cd 2DAlphabet
 python setup.py develop
+
+git clone git clone git@github.com:CMS-H3PO/HHH_2DAlphabet.git
+cd HHH_2DAlphabet
 ```
 You now have all the required software installed and the enviroment set up.
 
@@ -29,11 +31,11 @@ cd CMSSW_14_1_0_pre4
 cmsenv
 cd -
 source twoD-env/bin/activate
-cd H3PO/2DAlphabet
+cd HHH_2DAlphabet
 ```
 or alternatively just source the activation script
 ```
-cd H3PO/2DAlphabet
+cd HHH_2DAlphabet
 source activate_env
 ```
 
@@ -82,7 +84,7 @@ The toy data is generated using the `generateToys.py` script which imports the t
 ```
 python generateToys.py -y ${YEAR} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root
 ```
-Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions.
+Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions. These files need to be moved to the same folder with the other histogram files
 ```
 mv JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
 ```
