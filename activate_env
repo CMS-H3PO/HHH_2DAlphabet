@@ -1,5 +1,5 @@
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-cd ../CMSSW_14_1_0_pre4/src
+cd ../CMSSW_14_1_0_pre4
 cmsenv
-source ../../twoD-env/bin/activate
 cd -
+source ../twoD-env/bin/activate
