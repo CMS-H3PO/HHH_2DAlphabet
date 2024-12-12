@@ -213,16 +213,16 @@ def test_make(working_area,jsonConfig,findreplace={}):
     twoD.Save()
     
 
-def test_fit(working_area,polyOrder,sigName=None,strategy=0,rs=0,rMin=-1,rMax=10,setParams={},extra=''):
+def test_fit(working_area,polyOrder,sigName=None,defMinStrat=0,rInit=0,rMin=-1,rMax=10,setParams={},extra=''):
     twoD = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
     if sigName is not None:
         subset = twoD.ledger.select(_select_bkg, polyOrder, sigName)
     else:
         subset = twoD.ledger.select(_select_bkg, polyOrder)
     twoD.MakeCard(subset, '{0}_area'.format(polyOrder))
-    twoD.MLfit('{0}_area'.format(polyOrder),strategy=strategy,rs=rs,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
+    twoD.MLfit('{0}_area'.format(polyOrder),defMinStrat=defMinStrat,rInit=rInit,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
 
-def test_limit(working_area,orderSR,json_file,blind=True,strategy=0,extra=''):
+def test_limit(working_area,orderSR,json_file,blind=True,defMinStrat=0,extra=''):
     '''Perform a blinded limit. To be blinded, the Combine algorithm (via option `--run blind`)
     will create an Asimov toy dataset from the pre-fit model. Since the TF parameters are meaningless
     in our true "pre-fit", we need to load in the parameter values from a different fit so we have
@@ -241,7 +241,7 @@ def test_limit(working_area,orderSR,json_file,blind=True,strategy=0,extra=''):
         subtag='{0}_area'.format(orderSR),
         blindData=blind,
         verbosity=1,
-        strategy=strategy,
+        defMinStrat=defMinStrat,
         setParams=params_to_set,
         condor=False,
         extra=extra

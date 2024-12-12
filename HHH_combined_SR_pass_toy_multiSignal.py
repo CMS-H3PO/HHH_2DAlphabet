@@ -40,16 +40,16 @@ if __name__ == '__main__':
         "XToYHTo6B_MX-4000_MY-300", "XToYHTo6B_MX-4000_MY-600", "XToYHTo6B_MX-4000_MY-800", "XToYHTo6B_MX-4000_MY-1000", "XToYHTo6B_MX-4000_MY-1200", "XToYHTo6B_MX-4000_MY-1600", "XToYHTo6B_MX-4000_MY-2000", "XToYHTo6B_MX-4000_MY-2500", "XToYHTo6B_MX-4000_MY-2800", "XToYHTo6B_MX-4000_MY-3000", "XToYHTo6B_MX-4000_MY-3500", "XToYHTo6B_MX-4000_MY-3800"
     ]
     rMax = 5
-    strategy = 2
+    defMinStrat = 2
 
     # datasets that require special processing
     #sigNames = ["XToYHTo6B_MX-1000_MY-300", "XToYHTo6B_MX-1200_MY-300", "XToYHTo6B_MX-2000_MY-1200", "XToYHTo6B_MX-3000_MY-300"]
     #rMax = 3
-    #strategy = 2
+    #defMinStrat = 2
 
     #sigNames = ["XToYHTo6B_MX-3000_MY-2800"]
     #rMax = 1
-    #strategy = 2
+    #defMinStrat = 2
 
     bestOrders = {"{}_combined_SR_pass_toy_multiSignal".format(options.year):["1","2"]}
     for working_area in ["{}_combined_SR_pass_toy_multiSignal".format(options.year)]:
@@ -62,9 +62,9 @@ if __name__ == '__main__':
         for sig in sigNames:
             print("\nProcessing {0}...\n".format(sig))
 
-            test_fit(working_area,polyOrders[0],polyOrders[1],sigName=sig,strategy=strategy,setParams=setParams)
+            test_fit(working_area,polyOrders[0],polyOrders[1],sigName=sig,defMinStrat=defMinStrat,setParams=setParams)
             
-            test_limit(working_area,polyOrders[0],polyOrders[1],'%s/runConfig.json'%working_area,blind=True,strategy=strategy,extra=("--rMin=-1 --rMax={0}".format(rMax)))
+            test_limit(working_area,polyOrders[0],polyOrders[1],'%s/runConfig.json'%working_area,blind=True,defMinStrat=defMinStrat,extra=("--rMin=-1 --rMax={0}".format(rMax)))
 
             fit_area = "{0}/{1}-b_{2}-sb_area".format(working_area,polyOrders[0],polyOrders[1])
             sig_area = "{0}_{1}".format(fit_area,sig)

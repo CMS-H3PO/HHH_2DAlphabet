@@ -52,19 +52,19 @@ if __name__ == '__main__':
             for orderSB in ["1"]:
                 if options.year == "2017":
                     if [orderB,orderSB] in [["1","1"]]:
-                        test_fit(working_area,orderB,orderSB,strategy=2,rMin=-1,rMax=1,setParams=setParams)
+                        test_fit(working_area,orderB,orderSB,defMinStrat=2,rMin=-1,rMax=1,setParams=setParams)
                     else:
-                        test_fit(working_area,orderB,orderSB,strategy=1,rMin=-1,rMax=5)
+                        test_fit(working_area,orderB,orderSB,defMinStrat=1,rMin=-1,rMax=5)
                 else:
                     if [orderB,orderSB] in [["1","1"]]:
-                        test_fit(working_area,orderB,orderSB,strategy=2,rMin=-1,rMax=1,setParams=setParams)
+                        test_fit(working_area,orderB,orderSB,defMinStrat=2,rMin=-1,rMax=1,setParams=setParams)
                     else:
-                        test_fit(working_area,orderB,orderSB,strategy=1,rMin=-1,rMax=5)
+                        test_fit(working_area,orderB,orderSB,defMinStrat=1,rMin=-1,rMax=5)
                 test_plot(working_area,orderB,orderSB)
                 if [orderB,orderSB]==bestOrders[working_area]:
                     test_GoF(working_area,orderB,orderSB) # this waits for toy fits on Condor to finish
                     test_GoF_plot(working_area,orderB,orderSB)
-                    test_limit(working_area,orderB,orderSB,'%s/runConfig.json'%working_area,blind=True,strategy=2,extra="--rMin=-1 --rMax=3")
+                    test_limit(working_area,orderB,orderSB,'%s/runConfig.json'%working_area,blind=True,defMinStrat=2,extra="--rMin=-1 --rMax=3")
 
         #test_FTest(["0","0"],["0","1"])
         #test_FTest(["0","0"],["1","0"])
@@ -76,4 +76,4 @@ if __name__ == '__main__':
         #test_FTest(["1","2"],["2","2"])
   
         # limit calculation put at the end in case it crashes when run right after GoF
-        #test_limit(working_area,bestOrders[working_area][0],bestOrders[working_area][1],'%s/runConfig.json'%working_area,blind=True,strategy=2,extra="--rMin=-1 --rMax=3")
+        #test_limit(working_area,bestOrders[working_area][0],bestOrders[working_area][1],'%s/runConfig.json'%working_area,blind=True,defMinStrat=2,extra="--rMin=-1 --rMax=3")

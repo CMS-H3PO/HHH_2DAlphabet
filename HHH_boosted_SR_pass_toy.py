@@ -25,17 +25,17 @@ if __name__ == '__main__':
 
         for polyOrder in ["0","1","2","3"]:
             if options.year == "2017":
-                test_fit(working_area,polyOrder,strategy=1, rMin=-5, rMax=5)
+                test_fit(working_area,polyOrder,defMinStrat=1, rMin=-5, rMax=5)
             else:
                 if polyOrder in ["1","2","3"]:
-                    test_fit(working_area,polyOrder,strategy=2, rMin=-1, rMax=1)
+                    test_fit(working_area,polyOrder,defMinStrat=2, rMin=-1, rMax=1)
                 else:
-                    test_fit(working_area,polyOrder,strategy=1, rMin=-5, rMax=5)
+                    test_fit(working_area,polyOrder,defMinStrat=1, rMin=-5, rMax=5)
             test_plot(working_area,polyOrder)
             if polyOrder==bestOrder[working_area]:
                 test_GoF(working_area,polyOrder) # this waits for toy fits on Condor to finish
                 test_GoF_plot(working_area,polyOrder)
-                test_limit(working_area,polyOrder,'%s/runConfig.json'%working_area,blind=True,strategy=1,extra="--rMin=-1 --rMax=5")
+                test_limit(working_area,polyOrder,'%s/runConfig.json'%working_area,blind=True,defMinStrat=1,extra="--rMin=-1 --rMax=5")
 
         test_FTest(working_area,"0","1")
         test_FTest(working_area,"1","2")

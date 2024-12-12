@@ -26,13 +26,13 @@ if __name__ == '__main__':
         for polyOrder in ["0","1","2","3"]:
             if options.year == "2017":
                 if polyOrder in ["1"]:
-                    test_fit(working_area,polyOrder,strategy=2, rMin=-5, rMax=5, setParams={'qcd_rpfT_1_par0':'6.80','qcd_rpfT_1_par1':'-3.00','qcd_rpfT_1_par2':'0.50'})
+                    test_fit(working_area,polyOrder,defMinStrat=2, rMin=-5, rMax=5, setParams={'qcd_rpfT_1_par0':'6.80','qcd_rpfT_1_par1':'-3.00','qcd_rpfT_1_par2':'0.50'})
                 elif polyOrder in ["2","3"]:
-                    test_fit(working_area,polyOrder,strategy=2, rMin=-5, rMax=10)
+                    test_fit(working_area,polyOrder,defMinStrat=2, rMin=-5, rMax=10)
                 else:
-                    test_fit(working_area,polyOrder,strategy=1, rMin=-5, rMax=5)
+                    test_fit(working_area,polyOrder,defMinStrat=1, rMin=-5, rMax=5)
             else:
-                test_fit(working_area,polyOrder,strategy=1, rMin=-5, rMax=5)
+                test_fit(working_area,polyOrder,defMinStrat=1, rMin=-5, rMax=5)
             test_plot(working_area,polyOrder)
             if polyOrder==bestOrder[working_area]:
                 test_GoF(working_area,polyOrder) # this waits for toy fits on Condor to finish
