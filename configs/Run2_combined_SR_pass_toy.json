@@ -5,7 +5,7 @@
           "SYSTEMATICS":[
           ],
           "SCALE":1.0,
-          "COLOR":1,
+          "COLOR":"black",
           "TYPE":"DATA",
           "TITLE":"data_obs",
           "LOC":"PATH/JetHT_Histograms_SR_pass_toy.root:HIST"
@@ -16,7 +16,7 @@
              "topxsec"
           ],
           "SCALE":1.0,
-          "COLOR":2,
+          "COLOR":"red",
           "TYPE":"BKG",
           "TITLE":"t#bar{t}",
           "LOC":"PATH/FILE:HIST"
@@ -26,7 +26,7 @@
              "lumi"
           ],
           "SCALE":1.0,
-          "COLOR":1,
+          "COLOR":"black",
           "TYPE":"SIGNAL",
           "TITLE":"Signal",
           "LOC":"PATH/FILE:HIST"
