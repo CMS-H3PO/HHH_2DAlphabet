@@ -15,8 +15,9 @@ cd -
 
 python3 -m venv twoD-env
 source twoD-env/bin/activate
-git clone -b el9_plotting --depth 1 git@github.com:CMS-H3PO/2DAlphabet.git
+git clone https://github.com/JHU-Tools/2DAlphabet.git
 cd 2DAlphabet
+git checkout 74daef1
 python setup.py develop
 
 git clone git clone git@github.com:CMS-H3PO/HHH_2DAlphabet.git
