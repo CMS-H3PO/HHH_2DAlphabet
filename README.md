@@ -60,12 +60,7 @@ python -u HHH_semiboosted_VR.py -y ${YEAR} |& tee ${YEAR}_semiboosted_VR_`date "
 ```
 Note that piping output to the `tee` command will both print it to the terminal and save it in a log file. The log file name will contain a timestamp.
 
-Now set the best-fit polynomial orders, for `2017`
-```
-export BEST_B=1
-export BEST_SB=2
-```
-and for `Run2`
+Now set the best polynomial orders for both `2017` and `Run2`
 ```
 export BEST_B=1
 export BEST_SB=1
@@ -87,7 +82,7 @@ python generateToys.py -y ${YEAR} -t symlink2histograms_${YEAR}/TTbar_Histograms
 ```
 Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions. These files need to be moved to the same folder with the other histogram files
 ```
-mv JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
+mv -v JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
 ```
 The toy data in the validation regions is used in `HHH_boosted_VR_pass_toy.py` and `HHH_semiboosted_VR_pass_toy.py` as a sort of sanity check (closure test) to check whether the toy data fits converge to parameter values similar to those used in the generation of the toy data
 ```
@@ -114,7 +109,7 @@ To do the same for the semiboosted channel, run
 ```
 python -u HHH_semiboosted_SR_pass_toy.py -y ${YEAR} |& tee ${YEAR}_semiboosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
-Set the best-fit polynomial orders for both `2017` and `Run2`
+Set the best polynomial orders for both `2017` and `Run2`
 ```
 export BEST_B=1
 export BEST_SB=1

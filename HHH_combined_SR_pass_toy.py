@@ -19,24 +19,24 @@ if __name__ == '__main__':
     # best-fit parameter values from individual fits
     setParams = {}
     if options.year == "2017":
-        params_b = {'qcd_b_rpfT_1_par0':  '6.9722293911',
-                    'qcd_b_rpfT_1_par1': '-2.6216322625',
-                    'qcd_b_rpfT_1_par2':  '1.1057040331'}
+        params_b = {'qcd_b_rpfT_1_par0':  '7.4472843501',
+                    'qcd_b_rpfT_1_par1': '-1.2225904300',
+                    'qcd_b_rpfT_1_par2': '-3.1183407096'}
 
-        params_sb = {'qcd_sb_rpfT_1_par0':  '6.3419944445',
-                     'qcd_sb_rpfT_1_par1': '-7.9777135785',
-                     'qcd_sb_rpfT_1_par2':  '2.0819610327'}
+        params_sb = {'qcd_sb_rpfT_1_par0':  '5.4947964137',
+                     'qcd_sb_rpfT_1_par1': '-3.5582852528',
+                     'qcd_sb_rpfT_1_par2': '-0.0780756126'}
 
         setParams.update(params_b)
         setParams.update(params_sb)
     else:
-        params_b = {'qcd_b_rpfT_1_par0':  '6.5297055558',
-                    'qcd_b_rpfT_1_par1': '-2.5859269353',
-                    'qcd_b_rpfT_1_par2':  '0.7874599276'}
+        params_b = {'qcd_b_rpfT_1_par0':  '6.8340583943',
+                    'qcd_b_rpfT_1_par1': '-2.3548378672',
+                    'qcd_b_rpfT_1_par2': '-0.6790766045'}
 
-        params_sb = {'qcd_sb_rpfT_1_par0':  '5.9207814471',
-                     'qcd_sb_rpfT_1_par1': '-4.5875310779',
-                     'qcd_sb_rpfT_1_par2': '-0.2105124716'}
+        params_sb = {'qcd_sb_rpfT_1_par0':  '5.4343550424',
+                     'qcd_sb_rpfT_1_par1': '-3.7389159803',
+                     'qcd_sb_rpfT_1_par2':  '0.3228800971'}
 
         setParams.update(params_b)
         setParams.update(params_sb)

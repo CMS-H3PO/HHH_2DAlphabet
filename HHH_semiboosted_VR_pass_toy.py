@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_known_args()
 
-    bestOrder = {"{}_semiboosted_VR_pass_toy".format(options.year):"2" if options.year=="2017" else "1"}
+    bestOrder = {"{}_semiboosted_VR_pass_toy".format(options.year):"1"}
     for working_area in ["{}_semiboosted_VR_pass_toy".format(options.year)]:
 
         jsonConfig   = 'configs/{0}.json'.format(working_area)
