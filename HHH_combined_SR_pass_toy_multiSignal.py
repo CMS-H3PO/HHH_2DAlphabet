@@ -1,4 +1,4 @@
-from HHH_base_combination import *
+from utils.HHH_base_combination import *
 from argparse import ArgumentParser
 import os
 

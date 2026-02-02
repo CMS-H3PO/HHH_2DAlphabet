@@ -1,4 +1,4 @@
-from HHH_base_singleChannel import *
+from utils.HHH_base_singleChannel import *
 from argparse import ArgumentParser
 
 
