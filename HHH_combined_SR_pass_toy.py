@@ -30,13 +30,13 @@ if __name__ == '__main__':
         setParams.update(params_b)
         setParams.update(params_sb)
     else:
-        params_b = {'qcd_b_rpfT_1_par0':  '6.8340583943',
-                    'qcd_b_rpfT_1_par1': '-2.3548378672',
-                    'qcd_b_rpfT_1_par2': '-0.6790766045'}
+        params_b = {'qcd_b_rpfT_1_par0':  '7.1078935818',
+                    'qcd_b_rpfT_1_par1': '-3.3944459268',
+                    'qcd_b_rpfT_1_par2':  '0.0605185254'}
 
-        params_sb = {'qcd_sb_rpfT_1_par0':  '5.4343550424',
-                     'qcd_sb_rpfT_1_par1': '-3.7389159803',
-                     'qcd_sb_rpfT_1_par2':  '0.3228800971'}
+        params_sb = {'qcd_sb_rpfT_1_par0':  '5.2953377262',
+                     'qcd_sb_rpfT_1_par1': '-3.6739808143',
+                     'qcd_sb_rpfT_1_par2':  '0.9656145041'}
 
         setParams.update(params_b)
         setParams.update(params_sb)
