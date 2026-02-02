@@ -2,15 +2,15 @@ import os
 from argparse import ArgumentParser
 
 
-def generate(year, ttbar_path, data_path, region):
+def generate(year, ttbar_path, data_path, seed, region):
     from plotRpf_VR import x_min, x_max, y_min, y_max, rpf_boosted_VR, rpf_semiboosted_VR
     import ROOT
 
-    print('Processing {0} region...\n'.format(region))
-    
+    print('Processing {0} region for {1}...\n'.format(region, year))
+
+    print('INFO: Random number generator seed: {0}'.format(seed))
+
     # random number generator
-    #seed = 4357 # default according to https://root.cern.ch/doc/master/classTRandom3.html
-    seed = 1234567
     rnd = ROOT.TRandom3(seed)
 
     data_toy_file = os.path.splitext(os.path.basename(data_path))[0] + "_{0}_pass_toy.root".format(region)
@@ -132,8 +132,14 @@ if __name__ == '__main__':
                       metavar="DATA",
                       required=True)
     
+    parser.add_argument("-s", "--seed", dest="seed",
+                      help="Random number generator seed",
+                      metavar="SEED",
+                      type=int,
+                      default=4357) # according to https://root.cern.ch/doc/master/classTRandom3.html, the default value is 4357
+
     (options, args) = parser.parse_known_args()
     
     # generate toy data
-    generate(options.year, options.ttbar, options.data, 'VR')
-    generate(options.year, options.ttbar, options.data, 'SR')
+    generate(options.year, options.ttbar, options.data, options.seed, 'VR')
+    generate(options.year, options.ttbar, options.data, options.seed, 'SR')

@@ -47,10 +47,12 @@ source activate_env
 First, define year for which you want to run the fits, e.g.
 ```
 export YEAR=2017
+export RND_SEED=1234567
 ```
 or
 ```
 export YEAR=Run2
+export RND_SEED=95147
 ```
 For running fits and making plots for the boosted validation region, run
 ```
@@ -80,7 +82,7 @@ python plotRpf_VR.py -y ${YEAR}
 ```
 The toy data is generated using the `generateToys.py` script which imports the transfer functions from `plotRpf_VR.py`
 ```
-python generateToys.py -y ${YEAR} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root
+python generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
 ```
 Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions. These files need to be moved to the same folder with the other histogram files
 ```
