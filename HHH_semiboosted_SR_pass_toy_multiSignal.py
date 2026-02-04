@@ -27,18 +27,11 @@ if __name__ == '__main__':
         "XToYHTo6B_MX-4000_MY-300", "XToYHTo6B_MX-4000_MY-600", "XToYHTo6B_MX-4000_MY-800", "XToYHTo6B_MX-4000_MY-1000", "XToYHTo6B_MX-4000_MY-1200", "XToYHTo6B_MX-4000_MY-1600", "XToYHTo6B_MX-4000_MY-2000", "XToYHTo6B_MX-4000_MY-2500", "XToYHTo6B_MX-4000_MY-2800", "XToYHTo6B_MX-4000_MY-3000", "XToYHTo6B_MX-4000_MY-3500", "XToYHTo6B_MX-4000_MY-3800"
     ]
     rMax = 5
-    defMinStrat = 1
+    defMinStratFit = 2
+    defMinStrat = 2
 
-    # datasets that require special processing
-    #sigNames = ["XToYHTo6B_MX-1200_MY-1000", "XToYHTo6B_MX-3000_MY-2800"]
-    #rMax = 2
-    #defMinStrat = 1
 
-    #sigNames = ["XToYHTo6B_MX-1000_MY-300", "XToYHTo6B_MX-1000_MY-600", "XToYHTo6B_MX-1000_MY-800", "XToYHTo6B_MX-1600_MY-600", "XToYHTo6B_MX-1600_MY-1200", "XToYHTo6B_MX-2000_MY-300"]
-    #rMax = 10
-    #defMinStrat = 2
-
-    bestOrder = {"{}_semiboosted_SR_pass_toy_multiSignal".format(options.year):"2"}
+    bestOrder = {"{}_semiboosted_SR_pass_toy_multiSignal".format(options.year):"1"}
     for working_area in ["{}_semiboosted_SR_pass_toy_multiSignal".format(options.year)]:
 
         jsonConfig   = 'configs/{0}.json'.format(working_area)
@@ -49,7 +42,7 @@ if __name__ == '__main__':
         for sig in sigNames:
             print("\nProcessing {0}...\n".format(sig))
 
-            test_fit(working_area,polyOrder,sigName=sig,defMinStrat=2)
+            test_fit(working_area,polyOrder,sigName=sig,defMinStrat=defMinStratFit, rMin=-1, rMax=1)
             
             test_limit(working_area,polyOrder,'%s/runConfig.json'%working_area,blind=True,defMinStrat=defMinStrat,extra=("--rMin=-1 --rMax={0}".format(rMax)))
 

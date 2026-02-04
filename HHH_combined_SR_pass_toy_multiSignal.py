@@ -16,18 +16,30 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_known_args()
 
-    # best-fit values from individual fits
-    params_b = {'qcd_b_rpfT_1_par0':  '6.9722293911',
-                'qcd_b_rpfT_1_par1': '-2.6216322625',
-                'qcd_b_rpfT_1_par2':  '1.1057040331'}
-
-    params_sb = {'qcd_sb_rpfT_1_par0':  '6.3419944445',
-                 'qcd_sb_rpfT_1_par1': '-7.9777135785',
-                 'qcd_sb_rpfT_1_par2':  '2.0819610327'}
-
+    # best-fit parameter values from individual fits
     setParams = {}
-    setParams.update(params_b)
-    setParams.update(params_sb)
+    if options.year == "2017":
+        params_b = {'qcd_b_rpfT_1_par0':  '7.4472843501',
+                    'qcd_b_rpfT_1_par1': '-1.2225904300',
+                    'qcd_b_rpfT_1_par2': '-3.1183407096'}
+
+        params_sb = {'qcd_sb_rpfT_1_par0':  '5.4947964137',
+                     'qcd_sb_rpfT_1_par1': '-3.5582852528',
+                     'qcd_sb_rpfT_1_par2': '-0.0780756126'}
+
+        setParams.update(params_b)
+        setParams.update(params_sb)
+    else:
+        params_b = {'qcd_b_rpfT_1_par0':  '7.1078935818',
+                    'qcd_b_rpfT_1_par1': '-3.3944459268',
+                    'qcd_b_rpfT_1_par2':  '0.0605185254'}
+
+        params_sb = {'qcd_sb_rpfT_1_par0':  '5.2953377262',
+                     'qcd_sb_rpfT_1_par1': '-3.6739808143',
+                     'qcd_sb_rpfT_1_par2':  '0.9656145041'}
+
+        setParams.update(params_b)
+        setParams.update(params_sb)
 
     sigNames = [
         "XToYHTo6B_MX-1000_MY-300", "XToYHTo6B_MX-1000_MY-600", "XToYHTo6B_MX-1000_MY-800",
@@ -40,18 +52,17 @@ if __name__ == '__main__':
         "XToYHTo6B_MX-4000_MY-300", "XToYHTo6B_MX-4000_MY-600", "XToYHTo6B_MX-4000_MY-800", "XToYHTo6B_MX-4000_MY-1000", "XToYHTo6B_MX-4000_MY-1200", "XToYHTo6B_MX-4000_MY-1600", "XToYHTo6B_MX-4000_MY-2000", "XToYHTo6B_MX-4000_MY-2500", "XToYHTo6B_MX-4000_MY-2800", "XToYHTo6B_MX-4000_MY-3000", "XToYHTo6B_MX-4000_MY-3500", "XToYHTo6B_MX-4000_MY-3800"
     ]
     rMax = 5
+    defMinStratFit = 2
     defMinStrat = 2
 
     # datasets that require special processing
-    #sigNames = ["XToYHTo6B_MX-1000_MY-300", "XToYHTo6B_MX-1200_MY-300", "XToYHTo6B_MX-2000_MY-1200", "XToYHTo6B_MX-3000_MY-300"]
-    #rMax = 3
-    #defMinStrat = 2
-
-    #sigNames = ["XToYHTo6B_MX-3000_MY-2800"]
+    #sigNames = ["XToYHTo6B_MX-3000_MY-2000", "XToYHTo6B_MX-3500_MY-1000", "XToYHTo6B_MX-3500_MY-1200", "XToYHTo6B_MX-4000_MY-800"]
     #rMax = 1
+    #defMinStratFit = 2
     #defMinStrat = 2
 
-    bestOrders = {"{}_combined_SR_pass_toy_multiSignal".format(options.year):["1","2"]}
+
+    bestOrders = {"{}_combined_SR_pass_toy_multiSignal".format(options.year):["1","1"]}
     for working_area in ["{}_combined_SR_pass_toy_multiSignal".format(options.year)]:
 
         jsonConfig   = 'configs/{0}.json'.format(working_area)
@@ -62,7 +73,7 @@ if __name__ == '__main__':
         for sig in sigNames:
             print("\nProcessing {0}...\n".format(sig))
 
-            test_fit(working_area,polyOrders[0],polyOrders[1],sigName=sig,defMinStrat=defMinStrat,setParams=setParams)
+            test_fit(working_area,polyOrders[0],polyOrders[1],sigName=sig,defMinStrat=defMinStratFit,rMin=-1,rMax=1,setParams=setParams)
             
             test_limit(working_area,polyOrders[0],polyOrders[1],'%s/runConfig.json'%working_area,blind=True,defMinStrat=defMinStrat,extra=("--rMin=-1 --rMax={0}".format(rMax)))
 
