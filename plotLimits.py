@@ -117,5 +117,5 @@ if __name__ == '__main__':
     config = json.load(json_file)
 
     makePlot('{0}_boosted_SR_pass_toy_multiSignal'.format(year), year, config, '1')
-    makePlot('{0}_semiboosted_SR_pass_toy_multiSignal'.format(year), year, config, '2')
-    makePlot('{0}_combined_SR_pass_toy_multiSignal'.format(year), year, config, '1-b_2-sb')
+    makePlot('{0}_semiboosted_SR_pass_toy_multiSignal'.format(year), year, config, '1')
+    makePlot('{0}_combined_SR_pass_toy_multiSignal'.format(year), year, config, '1-b_1-sb')
