@@ -38,7 +38,7 @@ def makePlot(fit_area, year, config, polyOrder):
         xsec = config[year][sample]["xsec"]
         #print("xsec = {0}".format(xsec))
 
-        file_path = '{0}/{1}_area_{2}/higgsCombineTest.AsymptoticLimits.mH120.root'.format(fit_area, polyOrder, sample)
+        file_path = '{0}/{1}/{2}_area/higgsCombineTest.AsymptoticLimits.mH120.root'.format(fit_area, sample, polyOrder)
 
         f = ROOT.TFile.Open(file_path)
 

@@ -137,15 +137,15 @@ python -u HHH_combined_SR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_combined_SR
 ```
 To calculate expected limits for multiple signal samples for the boosted channel, run
 ```
-python -u HHH_boosted_SR_pass_toy_multiSignal.py -y ${YEAR} |& tee logs/${YEAR}_boosted_SR_pass_toy_multiSignal_`date "+%Y%m%d_%H%M%S"`.log
+python -u HHH_boosted_SR_pass_toy_multiSignal.py -y ${YEAR} --condor
 ```
 To do the same for the semiboosted channel, run
 ```
-python -u HHH_semiboosted_SR_pass_toy_multiSignal.py -y ${YEAR} |& tee logs/${YEAR}_semiboosted_SR_pass_toy_multiSignal_`date "+%Y%m%d_%H%M%S"`.log
+python -u HHH_semiboosted_SR_pass_toy_multiSignal.py -y ${YEAR} --condor
 ```
 Note that some samples might require special processing with a modified `rMax` value for the limit calculation to converge. To calculate expected limits for multiple signal samples for the combination of boosted and semiboosted channels, run
 ```
-python -u HHH_combined_SR_pass_toy_multiSignal.py -y ${YEAR} |& tee logs/${YEAR}_combined_SR_pass_toy_multiSignal_`date "+%Y%m%d_%H%M%S"`.log
+python -u HHH_combined_SR_pass_toy_multiSignal.py -y ${YEAR} --condor
 ```
 Finally, to produce the expected limit plots, run
 ```
