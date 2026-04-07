@@ -47,7 +47,7 @@ source activate_env
 First, define year for which you want to run the fits, e.g.
 ```
 export YEAR=2017
-export RND_SEED=1234567
+export RND_SEED=95147
 ```
 or
 ```
@@ -88,7 +88,7 @@ Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy 
 ```
 mv -v JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
 ```
-The toy data in the validation regions is used in `HHH_boosted_VR_pass_toy.py` and `HHH_semiboosted_VR_pass_toy.py` as a sort of sanity check (closure test) to check whether the toy data fits converge to parameter values similar to those used in the generation of the toy data
+The toy data in the validation regions is used in `HHH_boosted_VR_pass_toy.py` and `HHH_semiboosted_VR_pass_toy.py` as a sort of sanity check that the toy data fits also converge
 ```
 python -u HHH_boosted_VR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 python -u HHH_semiboosted_VR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_semiboosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log

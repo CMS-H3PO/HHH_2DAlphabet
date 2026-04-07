@@ -27,7 +27,7 @@ if __name__ == '__main__':
             if options.year == "2017":
                 if polyOrder in ["1"]:
                     test_fit(working_area,polyOrder,defMinStrat=2, rMin=-5, rMax=5, setParams={'qcd_rpfT_1_par0':'6.80','qcd_rpfT_1_par1':'-2.50','qcd_rpfT_1_par2':'-0.20'})
-                elif polyOrder in ["2","3"]:
+                elif polyOrder in ["2"]:
                     test_fit(working_area,polyOrder,defMinStrat=2, rMin=-5, rMax=10)
                 else:
                     test_fit(working_area,polyOrder,defMinStrat=1, rMin=-5, rMax=5)

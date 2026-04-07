@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     year = sys.argv[1]
 
-    json_file = open("../H3PO/Analysis/xsecs.json")
+    json_file = open("../H3PO/Analysis/config/xsecs.json")
     config = json.load(json_file)
 
     makePlot('{0}_boosted_SR_pass_toy_multiSignal'.format(year), year, config, '1')
