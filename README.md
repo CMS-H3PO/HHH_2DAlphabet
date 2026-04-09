@@ -73,17 +73,17 @@ export BEST_SB=1
 To calculate expected limits, we first need to generate toy data in the pass category of the signal regions. For this we use the pass-to-fail transfer functions (Rpf) obtained from the validation region fits. First we need to extract the fit parameter values which can be done using the following commands
 ```
 echo -e "Boosted VR:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted VR:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_semiboosted_VR/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `plotRpf_VR.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `tools/plotRpf_VR.py` in order to plot the transfer functions
 ```
-python plotRpf_VR.py -y ${YEAR}
+python tools/plotRpf_VR.py -y ${YEAR}
 ```
-The toy data is generated using the `generateToys.py` script which imports the transfer functions from `plotRpf_VR.py`
+The toy data is generated using the `tools/generateToys.py` script which imports the transfer functions from `tools/plotRpf_VR.py`
 ```
-python generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
+python tools/generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
 ```
 Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions. These files need to be moved to the same folder with the other histogram files
 ```
@@ -97,13 +97,13 @@ python -u HHH_semiboosted_VR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_semiboos
 The Rpf parameter values can be printed with the following commands
 ```
 echo -e "Boosted VR pass toy:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_boosted_VR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_boosted_VR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted VR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_semiboosted_VR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `plotRpf_VR_pass_toy.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `tools/plotRpf_VR_pass_toy.py` in order to plot the transfer functions
 ```
-python plotRpf_VR_pass_toy.py -y ${YEAR}
+python tools/plotRpf_VR_pass_toy.py -y ${YEAR}
 ```
 
 To perform the same checks for the signal region fits and calculate expected limits for the benchmark XToYHTo6B_MX-2500_MY-800 case for the boosted channel, run
@@ -122,13 +122,13 @@ export BEST_SB=1
 The Rpf parameter values can be printed with the following commands
 ```
 echo -e "Boosted SR pass toy:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_boosted_SR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_boosted_SR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted SR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
-python printFitParameters.py -i ${YEAR}_semiboosted_SR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
+python tools/printFitParameters.py -i ${YEAR}_semiboosted_SR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `plotRpf_SR_pass_toy.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `tools/plotRpf_SR_pass_toy.py` in order to plot the transfer functions
 ```
-python plotRpf_SR_pass_toy.py -y ${YEAR}
+python tools/plotRpf_SR_pass_toy.py -y ${YEAR}
 ```
 Note that the best polynomial order for the toy data fits might in general be different from the real data fits.
 
@@ -150,5 +150,5 @@ python -u HHH_combined_SR_pass_toy_multiSignal.py -y ${YEAR} --condor
 ```
 Finally, to produce the expected limit plots, run
 ```
-python -u plotLimits.py ${YEAR} |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
+python -u tools/plotLimits.py ${YEAR} |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
 ```
