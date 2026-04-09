@@ -19,6 +19,7 @@ git clone https://github.com/JHU-Tools/2DAlphabet.git
 cd 2DAlphabet
 git checkout 74daef1
 python setup.py develop
+cd -
 
 git clone git clone git@github.com:CMS-H3PO/HHH_2DAlphabet.git
 cd HHH_2DAlphabet
