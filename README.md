@@ -150,5 +150,5 @@ python -u HHH_combined_SR_pass_toy_multiSignal.py -y ${YEAR} --condor
 ```
 Finally, to produce the expected limit plots, run
 ```
-python -u tools/plotLimits.py ${YEAR} |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
+python -u tools/plotLimits.py -y ${YEAR} --minZ 0.1 --maxZ 1000 |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
 ```
