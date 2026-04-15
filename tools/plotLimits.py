@@ -19,7 +19,7 @@ mass_points = [
 ]
 
 
-def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixed, logY, inputDir, minY, maxY):
+def makePlot(fit_area, year, config, polyOrder, plotDimension, m_X, m_Y, logY, inputDir, minY, maxY, minZ, maxZ):
 
     channel = 'boosted'
     if 'semiboosted' in fit_area:
@@ -32,10 +32,10 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
         title = ";m_{{X}} [GeV];m_{{Y}} [GeV];95% CL expected upper limit ({0}) [fb]".format(channel)
     else:
         gr_limit = copy.deepcopy(ROOT.TGraph())
-        if (mX_fixed is not None):
-            title = "m_{{X}} = {0};m_{{Y}} [GeV];95% CL expected upper limit ({1}) [fb]".format(mX_fixed, channel)
+        if (m_X is not None):
+            title = "m_{{X}} = {0} GeV;m_{{Y}} [GeV];95% CL expected upper limit ({1}) [fb]".format(m_X, channel)
         else:
-            title = "m_{{Y}} = {0};m_{{X}} [GeV];95% CL expected upper limit ({1}) [fb]".format(mY_fixed, channel)
+            title = "m_{{Y}} = {0} GeV;m_{{X}} [GeV];95% CL expected upper limit ({1}) [fb]".format(m_Y, channel)
             
     gr_limit.SetTitle(title) 
 
@@ -45,9 +45,9 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
     for (mX, mY) in mass_points:
         
         if (plotDimension == "1D"):
-            if (mX_fixed is not None) and mX != mX_fixed:
+            if (m_X is not None) and m_X != mX:
                 continue
-            if (mY_fixed is not None) and mY != mY_fixed:
+            if (m_Y is not None) and m_Y != mY:
                 continue
         
         sample = 'XToYHTo6B_MX-{0}_MY-{1}'.format(mX, mY)
@@ -61,8 +61,8 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
         #print(file_path)
 
         if not isfile(file_path):
-               print ("Sample file for ({0}, {1}) not found".format(mX, mY))
-               continue
+            print ("Sample file for ({0}, {1}) not found".format(mX, mY))
+            continue
 
         f = ROOT.TFile.Open(file_path)
 
@@ -85,7 +85,7 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
         if (plotDimension == "2D"):   
             gr_limit.SetPoint(n, mX, mY, xs_limit)
         else:
-            if (mX_fixed is not None):
+            if (mX is not None):
                 gr_limit.SetPoint(n, mY, xs_limit)
             else:
                 gr_limit.SetPoint(n, mX, xs_limit)
@@ -103,8 +103,15 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
     c.cd()
     if (plotDimension == "1D") and (logY == True): 
         c.SetLogy()
+    if (plotDimension == "2D"):
+        c.SetLogz()
 
-    if (plotDimension == "1D"):
+    if (plotDimension == "2D"):
+        if (minZ is not None):
+           gr_limit.SetMinimum(minZ)
+        if (maxZ is not None):
+           gr_limit.SetMaximum(maxZ)
+    else:
         if (minY is not None): 
            gr_limit.SetMinimum(minY)
         if (maxY is not None):
@@ -119,26 +126,17 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, mX_fixed, mY_fixe
     CMS_lumi.cmsTextOffset = 0.2
     CMS_lumi.lumiTextSize = 0.4
     CMS_lumi.CMS_lumi(c, 1, 11)
-
-    c.SetLogz()
     
     if (plotDimension == "2D"):
         plotTitle = "{0}_{1}_expected_limits_2D.pdf".format(year, channel)
     else:
-        if (mX_fixed is not None):
-            plotTitle = "{0}_{1}_expected_limits_1D_for_mX_{2}.pdf".format(year, channel, mX_fixed)
+        if (mX is not None):
+            plotTitle = "{0}_{1}_expected_limits_1D_for_mX_{2}.pdf".format(year, channel, mX)
         else:
-            plotTitle = "{0}_{1}_expected_limits_1D_for_mY_{2}.pdf".format(year, channel, mY_fixed)
+            plotTitle = "{0}_{1}_expected_limits_1D_for_mY_{2}.pdf".format(year, channel, mY)
 
     c.SaveAs(plotTitle)
-    
-    
-def safe_int(value, name):   # convert input options to integers
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        print(f"Warning: {name} must be an integer.")
-        return None
+    c.Close()
 
 
 if __name__ == '__main__':
@@ -171,8 +169,8 @@ if __name__ == '__main__':
     ROOT.gROOT.ForceStyle()
     
     # set graph title position for 1D plots
-    ROOT.gStyle.SetTitleX(0.38)   # horizontal position (0 = left, 1 = right)
-    ROOT.gStyle.SetTitleY(0.98)  # vertical position (0 = bottom, 1 = top)
+    ROOT.gStyle.SetTitleX(0.3)   # horizontal position (0 = left, 1 = right)
+    ROOT.gStyle.SetTitleY(0.99)  # vertical position (0 = bottom, 1 = top)
     ROOT.gStyle.SetTitleBorderSize(0)
     #ROOT.gStyle.SetTitleAlign(23)
     
@@ -184,17 +182,19 @@ if __name__ == '__main__':
                         default="2017",
                         metavar="YEAR")
 
-    parser.add_argument("-mX", "--massX", dest="mX",
+    parser.add_argument("--mX", dest="mX",
                         help="Integer value of X mass for which 1D plot is created (default: %(default)s)",
                         default=None,
+                        type=int,
                         metavar="X mass")
     
-    parser.add_argument("-mY", "--massY", dest="mY",
+    parser.add_argument("--mY", dest="mY",
                         help="Integer value of Y mass for which 1D plot is created (default: %(default)s)",
                         default=None,
+                        type=int,
                         metavar="Y mass")
     
-    parser.add_argument("-logY", dest="logY", action='store_true',
+    parser.add_argument("--logY", dest="logY", action='store_true',
                         help="Sets log scale for Y-axis of 1D plots (default: %(default)s)",
                         default=False)
     
@@ -203,52 +203,66 @@ if __name__ == '__main__':
                         default="/users/ferencek/HHH/HHH_2DAlphabet/20260401/",
                         metavar="INPUT")
     
-    parser.add_argument("-minY", dest="minY",
+    parser.add_argument("--minY", dest="minY",
                         help="Y-axis minimum for 1D plot (None means automatic) (default: %(default)s)",
                         default=None,
+                        type=float,
                         metavar="Y_MIN")
     
-    parser.add_argument("-maxY", dest="maxY",
+    parser.add_argument("--maxY", dest="maxY",
                         help="Y-axis maximum for 1D plot (None means automatic) (default: %(default)s)",
                         default=None,
+                        type=float,
                         metavar="Y_MAX")
     
+    parser.add_argument("--minZ", dest="minZ",
+                        help="Y-axis minimum for 2D plot (None means automatic) (default: %(default)s)",
+                        default=None,
+                        type=float,
+                        metavar="Z_MIN")
+
+    parser.add_argument("--maxZ", dest="maxZ",
+                        help="Z-axis maximum for 2D plot (None means automatic) (default: %(default)s)",
+                        default=None,
+                        type=float,
+                        metavar="Z_MAX")
+
     (options, args) = parser.parse_known_args()
     
     year = options.year
-    mX_fixed = safe_int(options.mX, "mX") if options.mX is not None else None
-    mY_fixed = safe_int(options.mY, "mY") if options.mY is not None else None
-    minY = safe_int(options.minY, "minY") if options.minY is not None else None
-    maxY = safe_int(options.maxY, "maxY") if options.maxY is not None else None
-    
-     # If conversion failed, stop
-    if ((options.mX is not None and mX_fixed is None) or (options.mY is not None and mY_fixed is None) or (options.minY is not None and minY is None) or (options.maxY is not None and maxY is None)):
-        print("Invalid input: some arguments could not be parsed as integers.")
-        sys.exit(1)
-        
+    mX   = options.mX
+    mY   = options.mY
+    minY = options.minY
+    maxY = options.maxY
+    minZ = options.minZ
+    maxZ = options.maxZ
+
     if ((minY is not None) and (maxY is not None) and (minY >= maxY)):
         print("Warning: minY >= maxY")
         sys.exit(1)
+
+    if ((minZ is not None) and (maxZ is not None) and (minZ >= maxZ)):
+        print("Warning: minZ >= maxZ")
+        sys.exit(1)
     
-    print("year = ", year, "   mX = ", mX_fixed, "    mY = ", mY_fixed, "  logY = ", options.logY, "     input folder = ", options.input, "   minY = ", minY, "   maxY = ", maxY)
-    
-    if (mX_fixed is None) and (mX_fixed is None):
+    if (mX is None) and (mX is None):
         plotDimension="2D"
-    if (mX_fixed is not None) and (mY_fixed is None):
+    if (mX is not None) and (mY is None):
         plotDimension="1D"
-    if (mX_fixed is None) and (mY_fixed is not None):
+    if (mX is None) and (mY is not None):
         plotDimension="1D"
-    if (mX_fixed is not None) and (mY_fixed is not None):
+    if (mX is not None) and (mY is not None):
         print ("Warning: You can not specify both mX and mY parameters. To create a 2D plot leave both mX and mY unspecified. To create a 1D plot for a fixed mX or mY value, specify the corresponding value of mX or mY.")
         sys.exit(1)
 
+    print(' '.join(f'{k}={v}' for k, v in vars(options).items()))
 
     json_file = open("../H3PO/Analysis/config/xsecs.json")
     
     config = json.load(json_file)
 
-    makePlot('{0}_boosted_SR_pass_toy_multiSignal'.format(year), year, config, '1', plotDimension, mX_fixed, mY_fixed, options.logY, options.input, minY, maxY)
-    makePlot('{0}_semiboosted_SR_pass_toy_multiSignal'.format(year), year, config, '1', plotDimension, mX_fixed, mY_fixed, options.logY, options.input, minY, maxY)
-    makePlot('{0}_combined_SR_pass_toy_multiSignal'.format(year), year, config, '1-b_1-sb', plotDimension, mX_fixed, mY_fixed, options.logY, options.input, minY, maxY)
+    makePlot('{0}_boosted_SR_pass_toy_multiSignal'.format(year), year, config, '1', plotDimension, mX, mY, options.logY, options.input, minY, maxY, minZ, maxZ)
+    makePlot('{0}_semiboosted_SR_pass_toy_multiSignal'.format(year), year, config, '1', plotDimension, mX, mY, options.logY, options.input, minY, maxY, minZ, maxZ)
+    makePlot('{0}_combined_SR_pass_toy_multiSignal'.format(year), year, config, '1-b_1-sb', plotDimension, mX, mY, options.logY, options.input, minY, maxY, minZ, maxZ)
     
 
