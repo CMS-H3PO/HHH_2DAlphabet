@@ -101,8 +101,11 @@ def makePlot(fit_area, year, config, polyOrder, plotDimension, m_X, m_Y, logY, i
 
     c = ROOT.TCanvas("c", "",1000,900)
     c.cd()
-    if (plotDimension == "1D") and (logY == True): 
-        c.SetLogy()
+    if (plotDimension == "1D"):
+        c.SetGridx()
+        c.SetGridy()
+        if (logY == True):
+            c.SetLogy()
     if (plotDimension == "2D"):
         c.SetLogz()
 
