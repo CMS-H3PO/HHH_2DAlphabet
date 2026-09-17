@@ -3,6 +3,7 @@ from TwoDAlphabet.twoDalphabet import MakeCard, TwoDAlphabet
 from TwoDAlphabet.alphawrap import BinnedDistribution, ParametricFunction
 from TwoDAlphabet.helpers import make_env_tarball, cd, execute_cmd
 from TwoDAlphabet.ftest import FstatCalc
+from base.helpers import *
 
 '''--------------------------Helper functions---------------------------'''
 def _gof_for_FTest(twoD, subtag, card_or_w='card.txt'):
@@ -80,7 +81,7 @@ def _load_CR_rpf(poly_order):
 
 def _load_fit_rpf(working_area,polyOrderB,polyOrderSB,json_file):
     twoD_blindFit = TwoDAlphabet(working_area,json_file, loadPrevious=True)
-    params_to_set = twoD_blindFit.GetParamsOnMatch('rpf.*', '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), 'b')
+    params_to_set = twoD_blindFit.GetParamsOnMatch('rpf.*', f'{polyOrderB}-b_{polyOrderSB}-sb_area', 'b')
     return {k:v['val'] for k,v in params_to_set.items()}
 
 def _load_CR_rpf_as_SR(poly_order):
@@ -287,14 +288,17 @@ def test_make(working_area,jsonConfig,findreplace={}):
     twoD.Save()
     
 
-def test_fit(working_area,polyOrderB,polyOrderSB,sigName=None,defMinStrat=0,rInit=0,rMin=-1,rMax=10,setParams={},extra=''):
+def test_fit(working_area,polyOrderB,polyOrderSB,sigName=None,defMinStrat=0,rInit=0,rMin=-1,rMax=10,setParams={},extra='',add_tt_mistag_sf=True):
     twoD = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
     if sigName is not None:
         subset = twoD.ledger.select(_select_bkg, polyOrderB, polyOrderSB, sigName)
     else:
         subset = twoD.ledger.select(_select_bkg, polyOrderB, polyOrderSB)
-    twoD.MakeCard(subset, '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB))
-    twoD.MLfit('{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB),defMinStrat=defMinStrat,rInit=rInit,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
+    subtag = f'{polyOrderB}-b_{polyOrderSB}-sb_area'
+    twoD.MakeCard(subset, subtag)
+    if add_tt_mistag_sf:
+        add_tt_pnet_sf_to_card(working_area,subtag)
+    twoD.MLfit(subtag,defMinStrat=defMinStrat,rInit=rInit,rMin=rMin,rMax=rMax,setParams=setParams,extra=extra,verbosity=0)
 
 def test_limit(working_area,polyOrderB,polyOrderSB,json_file,blind=True,defMinStrat=0,extra=''):
     '''Perform a blinded limit. To be blinded, the Combine algorithm (via option `--run blind`)
@@ -312,7 +316,7 @@ def test_limit(working_area,polyOrderB,polyOrderSB,json_file,blind=True,defMinSt
     #twoD.MakeCard(subset, poly_order+'_area')
     # Run the blinded limit with our dictionary of TF parameters
     twoD.Limit(
-        subtag='{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB),
+        subtag=f'{polyOrderB}-b_{polyOrderSB}-sb_area',
         blindData=blind,
         verbosity=1,
         defMinStrat=defMinStrat,
@@ -329,7 +333,7 @@ def test_plot(working_area,polyOrderB,polyOrderSB):
     '''
     twoD = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
     subset = twoD.ledger.select(_select_bkg, polyOrderB, polyOrderSB)
-    twoD.StdPlots('{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), subset)
+    twoD.StdPlots(f'{polyOrderB}-b_{polyOrderSB}-sb_area', subset)
 
 def test_GoF(working_area,polyOrderB,polyOrderSB):
     '''Perform a Goodness of Fit test using an existing working area.
@@ -344,7 +348,7 @@ def test_GoF(working_area,polyOrderB,polyOrderSB):
     # you must unblind data. If you wish to use a toy dataset instead, you should set that
     # up when making the card.
     twoD.GoodnessOfFit(
-        '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), ntoys=5000, freezeSignal=False,
+        f'{polyOrderB}-b_{polyOrderSB}-sb_area', ntoys=5000, freezeSignal=False,
         condor=True, njobs=100, card_or_w='card.txt', lorienTag=True
     )
 
@@ -353,7 +357,7 @@ def test_GoF(working_area,polyOrderB,polyOrderSB):
 
 
 def test_GoF_plot(working_area,polyOrderB,polyOrderSB):
-    plot.plot_gof(working_area,'{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), condor=True,lorien=True)
+    plot.plot_gof(working_area,f'{polyOrderB}-b_{polyOrderSB}-sb_area', condor=True,lorien=True)
 
 
 def test_Impacts(working_area,polyOrderB,polyOrderSB):
@@ -362,7 +366,7 @@ def test_Impacts(working_area,polyOrderB,polyOrderSB):
     subset = twoD.ledger.select(_select_bkg, polyOrderB, polyOrderSB)
 
     twoD.Impacts(
-        '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB),
+        f'{polyOrderB}-b_{polyOrderSB}-sb_area',
         cardOrW='TnP.root'
     )
 
