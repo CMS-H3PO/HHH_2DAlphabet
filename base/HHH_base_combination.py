@@ -344,8 +344,8 @@ def test_GoF(working_area,polyOrderB,polyOrderSB):
     # you must unblind data. If you wish to use a toy dataset instead, you should set that
     # up when making the card.
     twoD.GoodnessOfFit(
-        '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), ntoys=500, freezeSignal=False,
-        condor=True, njobs=10, card_or_w='card.txt', lorienTag=True
+        '{0}-b_{1}-sb_area'.format(polyOrderB, polyOrderSB), ntoys=5000, freezeSignal=False,
+        condor=True, njobs=100, card_or_w='card.txt', lorienTag=True
     )
 
     # Note that no plotting is done here since one needs to wait for the condor jobs to finish first.
