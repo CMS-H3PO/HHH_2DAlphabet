@@ -3,7 +3,7 @@ from TwoDAlphabet.twoDalphabet import MakeCard, TwoDAlphabet
 from TwoDAlphabet.alphawrap import BinnedDistribution, ParametricFunction
 from TwoDAlphabet.helpers import make_env_tarball, cd, execute_cmd
 from TwoDAlphabet.ftest import FstatCalc
-from base.helpers import *
+from base.helpers import add_tt_pnet_sf_to_card
 
 '''--------------------------Helper functions---------------------------'''
 def _gof_for_FTest(twoD, subtag, card_or_w='card.txt'):

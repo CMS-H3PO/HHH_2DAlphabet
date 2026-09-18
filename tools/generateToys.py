@@ -112,7 +112,7 @@ def generate(year, ttbar_path, data_path, seed, region):
 
 if __name__ == '__main__':
     # usage example
-    Description = "Example: %(prog)s -y 2017 -t symlink2histograms_2017/TTbar_Histograms.root -d symlink2histograms_2017/JetHT_Histograms.root"
+    Description = "Example: %(prog)s -y Run2 -t symlink2histograms_Run2/TTbar_Histograms.root -d symlink2histograms_Run2/JetHT_Histograms.root"
     
     # input parameters
     parser = ArgumentParser(description=Description)

@@ -1,5 +1,6 @@
 from TwoDAlphabet.config import Config
 import ROOT
+import os
 
 
 def get_bin_content_by_name(hist, name):
@@ -67,3 +68,53 @@ def add_tt_pnet_sf_to_card(working_area,subtag):
 
             datacard.write(pass_line)
             datacard.write(fail_line)
+
+
+def get_fit_config(year, channel, region, polyOrder, defaults, overrides):
+    config = defaults.copy()
+
+    # Apply wildcard overrides first
+    # Per year wildcard overrides
+    wildcard_per_year = (year, "*", "*", "*")
+    config.update(overrides.get(wildcard_per_year, {}))
+    # Per region wildcard overrides
+    wildcard_per_region = ("*", "*", region, "*")
+    config.update(overrides.get(wildcard_per_region, {}))
+
+    # Apply exact overrides last
+    exact_key = (year, channel, region, polyOrder)
+    config.update(overrides.get(exact_key, {}))
+
+    return config
+
+
+def submit_condor_job(sig,working_area,script_name,memory,args,dry_run):
+    print(f"\nWriting Condor files for {sig}\n")
+
+    condor_dir = os.path.join(working_area, sig, "condor")
+    os.makedirs(condor_dir,exist_ok=True)
+
+    exec_file = os.path.join(condor_dir, 'run.sh')
+
+    with open(exec_file, 'w') as e_file:
+        e_file.write('#!/bin/bash\n')
+        e_file.write('\n')
+        e_file.write(f'echo python -u {script_name} $*\n')
+        e_file.write(f'python -u {script_name} $*\n')
+
+    os.system('chmod +x ' + exec_file)
+
+    job_desc = os.path.join(condor_dir, 'job_desc.txt')
+
+    with open(job_desc, 'w') as j_file:
+        j_file.write(f'executable  = {exec_file}\n')
+        j_file.write('universe    = vanilla\n')
+        j_file.write('getenv = True\n')
+        j_file.write(f'RequestMemory = {memory}\n')
+        j_file.write('log    = ' + os.path.join(condor_dir, 'tmp.log') + '\n')
+        j_file.write('output = ' + os.path.join(condor_dir, 'tmp.out') + '\n')
+        j_file.write('error  = ' + os.path.join(condor_dir, 'tmp.err') + '\n')
+        j_file.write('arguments = "' + args + '"\n')
+        j_file.write('queue\n')
+    if not dry_run:
+        os.system('condor_submit ' + job_desc)
