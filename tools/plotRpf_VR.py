@@ -8,21 +8,28 @@ y_min = 200.
 y_max = 4500.
 
 # polynomials
+class Pol_0:
+    def __call__(self, arr, par):
+        # variable transformations to [0,1] range
+        x = (arr[0]-x_min)/(x_max-x_min)
+        y = (arr[1]-y_min)/(y_max-y_min)
+
+        return 0.01*par[0]
+
 class Pol_1:
     def __call__(self, arr, par):
         # variable transformations to [0,1] range
         x = (arr[0]-x_min)/(x_max-x_min)
         y = (arr[1]-y_min)/(y_max-y_min)
-        
-        return 0.01*(par[0]+par[1]*x+par[2]*y)
 
+        return 0.01*(par[0]+par[1]*x+par[2]*y)
 
 class Pol_2:
     def __call__(self, arr, par):
         # variable transformations to [0,1] range
         x = (arr[0]-x_min)/(x_max-x_min)
         y = (arr[1]-y_min)/(y_max-y_min)
-        
+
         return 0.01*(par[0]+par[1]*x+par[2]*y+par[3]*x*y+par[4]*x**2+par[5]*y**2)
 
 
@@ -33,38 +40,24 @@ rpf_boosted_VR = {}
 rpf_semiboosted_VR = {}
 
 # fail-to-pass transfer functions
-# 2017 boosted (best order)
-p_b["2017"] = Pol_1()
-rpf_boosted_VR["2017"] = ROOT.TF2("rpf_2017_boosted_VR;m_{jjj} [GeV];m_{jj} [GeV]",p_b["2017"],x_min,x_max,y_min,y_max,3)
-rpf_boosted_VR["2017"].SetParameter(0, 7.0961640132)
-rpf_boosted_VR["2017"].SetParameter(1,-2.3754618502)
-rpf_boosted_VR["2017"].SetParameter(2,-0.4549572482)
-
-# 2017 semiboosted (best order)
-p_sb["2017"] = Pol_1()
-rpf_semiboosted_VR["2017"] = ROOT.TF2("rpf_2017_semiboosted_VR;m_{jjj} [GeV];m_{jj} [GeV]",p_sb["2017"],x_min,x_max,y_min,y_max,3)
-rpf_semiboosted_VR["2017"].SetParameter(0, 5.6441622002)
-rpf_semiboosted_VR["2017"].SetParameter(1,-4.2553795474)
-rpf_semiboosted_VR["2017"].SetParameter(2, 0.1205337874)
-
 # Run2 boosted (best order)
 p_b["Run2"] = Pol_1()
 rpf_boosted_VR["Run2"] = ROOT.TF2("rpf_Run2_boosted_VR;m_{jjj} [GeV];m_{jj} [GeV]",p_b["Run2"],x_min,x_max,y_min,y_max,3)
-rpf_boosted_VR["Run2"].SetParameter(0, 7.0535058926)
-rpf_boosted_VR["Run2"].SetParameter(1,-2.7481488927)
-rpf_boosted_VR["Run2"].SetParameter(2,-0.1248791288)
+rpf_boosted_VR["Run2"].SetParameter(0, 6.2710257648)
+rpf_boosted_VR["Run2"].SetParameter(1,-2.0479707647)
+rpf_boosted_VR["Run2"].SetParameter(2,-0.1169500706)
 
 # Run2 semiboosted (best order)
 p_sb["Run2"] = Pol_1()
 rpf_semiboosted_VR["Run2"] = ROOT.TF2("rpf_Run2_semiboosted_VR;m_{jjj} [GeV];m_{jj} [GeV]",p_sb["Run2"],x_min,x_max,y_min,y_max,3)
-rpf_semiboosted_VR["Run2"].SetParameter(0, 5.5824740343)
-rpf_semiboosted_VR["Run2"].SetParameter(1,-3.7767866264)
-rpf_semiboosted_VR["Run2"].SetParameter(2, 0.1775612142)
+rpf_semiboosted_VR["Run2"].SetParameter(0, 4.7761934339)
+rpf_semiboosted_VR["Run2"].SetParameter(1,-2.9059666512)
+rpf_semiboosted_VR["Run2"].SetParameter(2, 0.1725724165)
 
 
 if __name__ == '__main__':
     # usage example
-    Description = "Example: %(prog)s -y 2017"
+    Description = "Example: %(prog)s -y Run2"
 
     # input parameters
     parser = ArgumentParser(description=Description)

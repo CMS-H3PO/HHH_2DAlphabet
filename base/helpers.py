@@ -67,3 +67,22 @@ def add_tt_pnet_sf_to_card(working_area,subtag):
 
             datacard.write(pass_line)
             datacard.write(fail_line)
+
+
+def get_fit_config(year, channel, region, polyOrder, defaults, overrides):
+    config = defaults.copy()
+
+    # Apply wildcard overrides first
+    wildcard_per_year = (year, "*", "*", "*")
+    config.update(overrides.get(wildcard_per_year, {}))
+
+    # Apply exact overrides last
+    # Exact overrides for combined fits
+    exact_key_combined = (year, "*", region, polyOrder)
+    config.update(overrides.get(exact_key_combined, {}))
+
+    # Exact overrides for single-channel fits
+    exact_key = (year, channel, region, polyOrder)
+    config.update(overrides.get(exact_key, {}))
+
+    return config

@@ -47,30 +47,29 @@ source activate_env
 
 First, define year for which you want to run the fits, e.g.
 ```
-export YEAR=2017
-export RND_SEED=95147
-```
-or
-```
 export YEAR=Run2
 export RND_SEED=95147
 ```
 For running fits and making plots for the boosted validation region, run
 ```
-python -u HHH_boosted_VR.py -y ${YEAR} |& tee logs/${YEAR}_boosted_VR_`date "+%Y%m%d_%H%M%S"`.log
+python -u run_singleFit.py -y ${YEAR} -c boosted -r VR |& tee logs/${YEAR}_boosted_VR_`date "+%Y%m%d_%H%M%S"`.log
 ```
 To do the same for the semiboosted validation region, run
 ```
-python -u HHH_semiboosted_VR.py -y ${YEAR} |& tee logs/${YEAR}_semiboosted_VR_`date "+%Y%m%d_%H%M%S"`.log
+python -u run_singleFit.py -y ${YEAR} -c semiboosted -r VR |& tee logs/${YEAR}_semiboosted_VR_`date "+%Y%m%d_%H%M%S"`.log
+```
+To perform the same for the combination of boosted and semiboosted channels, run
+```
+python -u run_combinedFit.py -y ${YEAR} -r VR |& tee logs/${YEAR}_combined_VR_`date "+%Y%m%d_%H%M%S"`.log
 ```
 Note that piping output to the `tee` command will both print it to the terminal and save it in a log file. The log file name will contain a timestamp.
 
-Now set the best polynomial orders for both `2017` and `Run2`
+Now set the best polynomial orders for `Run2`
 ```
 export BEST_B=1
 export BEST_SB=1
 ```
-To calculate expected limits, we first need to generate toy data in the pass category of the signal regions. For this we use the pass-to-fail transfer functions (Rpf) obtained from the validation region fits. First we need to extract the fit parameter values which can be done using the following commands
+To calculate expected limits, we first need to generate toy data in the pass category of the signal regions. For this we use the pass-to-fail transfer functions (Rpf) obtained from the validation region fits. First, we need to extract the fit parameter values, which can be done using the following commands
 ```
 echo -e "Boosted VR:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 python tools/printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
@@ -89,10 +88,11 @@ Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy 
 ```
 mv -v JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
 ```
-The toy data in the validation regions is used in `HHH_boosted_VR_pass_toy.py` and `HHH_semiboosted_VR_pass_toy.py` as a sort of sanity check that the toy data fits also converge
+The toy data in the validation regions is used as a sort of sanity check that the toy data fits also converge
 ```
-python -u HHH_boosted_VR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
-python -u HHH_semiboosted_VR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_semiboosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u run_singleFit.py -y ${YEAR} -c boosted -r VR_pass_toy |& tee logs/${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u run_singleFit.py -y ${YEAR} -c semiboosted -r VR_pass_toy |& tee logs/${YEAR}_semiboosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u run_combinedFit.py -y ${YEAR} -r VR_pass_toy |& tee logs/${YEAR}_combined_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
 The Rpf parameter values can be printed with the following commands
 ```
@@ -105,6 +105,7 @@ The printed fit parameter values need to be put into `tools/plotRpf_VR_pass_toy.
 ```
 python tools/plotRpf_VR_pass_toy.py -y ${YEAR}
 ```
+Note that the best polynomial order for the toy data fits might in general be different from the real data fits.
 
 To perform the same checks for the signal region fits and calculate expected limits for the benchmark XToYHTo6B_MX-2500_MY-800 case for the boosted channel, run
 ```
@@ -114,7 +115,7 @@ To do the same for the semiboosted channel, run
 ```
 python -u HHH_semiboosted_SR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_semiboosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
-Set the best polynomial orders for both `2017` and `Run2`
+Set the best polynomial orders for `Run2`
 ```
 export BEST_B=1
 export BEST_SB=1
@@ -130,8 +131,6 @@ The printed fit parameter values need to be put into `tools/plotRpf_SR_pass_toy.
 ```
 python tools/plotRpf_SR_pass_toy.py -y ${YEAR}
 ```
-Note that the best polynomial order for the toy data fits might in general be different from the real data fits.
-
 To perform the same calculations for the combination of boosted and semiboosted channels, run
 ```
 python -u HHH_combined_SR_pass_toy.py -y ${YEAR} |& tee logs/${YEAR}_combined_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
