@@ -286,14 +286,18 @@ def test_GoF_plot(working_area,polyOrder):
     plot.plot_gof(working_area,f'{polyOrder}_area', condor=True,lorien=True)
 
 
-def test_Impacts(working_area,polyOrder):
+def test_Impacts(working_area,polyOrder,cardOrW='initialFitWorkspace.root --snapshotName initialFit',rMin=-5,rMax=5,defMinStrat=0,extra=''):
 
     twoD = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
     subset = twoD.ledger.select(_select_bkg, polyOrder)
 
     twoD.Impacts(
         f'{polyOrder}_area',
-        cardOrW='TnP.root'
+        cardOrW=cardOrW,
+        rMin=rMin,
+        rMax=rMax,
+        defMinStrat=defMinStrat,
+        extra=extra
     )
 
 
