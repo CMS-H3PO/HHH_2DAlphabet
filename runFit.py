@@ -199,6 +199,9 @@ if __name__ == '__main__':
     parser.add_argument("--skipFTest", dest="skipFTest", action='store_true',
                         help="Skip F-test (default: %(default)s)",
                         default=False)
+    parser.add_argument("--dropInSituTTBarSFs", dest="dropInSituTTBarSFs", action='store_true',
+                        help="Drop in-situ scale factors for ttbar Xbb mistags (default: %(default)s)",
+                        default=False)
     parser.add_argument("-s", "--signals", dest="signals",
                         help="Space-separated list of signal processes (default: %(default)s)",
                         nargs="*",
@@ -282,7 +285,8 @@ if __name__ == '__main__':
                         sig_working_area,
                         *_polyOrder,
                         sigName=sig,
-                        **fit_config
+                        **fit_config,
+                        add_tt_mistag_sf=(not options.dropInSituTTBarSFs)
                     )
 
                     if sig in SIGNAL_OVERRIDES:
@@ -295,7 +299,8 @@ if __name__ == '__main__':
             test_fit(
                 working_area,
                 *_polyOrder,
-                **fit_config
+                **fit_config,
+                add_tt_mistag_sf=(not options.dropInSituTTBarSFs)
             )
 
             if not options.skipFitPlots:
