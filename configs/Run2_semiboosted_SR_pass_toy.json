@@ -13,7 +13,21 @@
        "TTbar":{
           "SYSTEMATICS":[
              "lumi",
-             "topxsec"
+             "FSRPartonShower",
+             "ISRPartonShower",
+             "L1Prefiring",
+             "PDF_weight",
+             "btag_fixedWP_bc_simple",
+             "btag_fixedWP_light_simple",
+             "jer",
+             "jes",
+             "jmr",
+             "jms",
+             "pileup",
+             "scalevar_7pt",
+             "topxsec",
+             "PDFaS_weight",
+             "aS_weight"
           ],
           "SCALE":1.0,
           "COLOR":"red",
@@ -23,7 +37,20 @@
        },
        "XToYHTo6B_MX-2500_MY-800":{
           "SYSTEMATICS":[
-             "lumi"
+             "lumi",
+             "FSRPartonShower",
+             "ISRPartonShower",
+             "L1Prefiring",
+             "PDF_weight",
+             "btag_fixedWP_bc_simple",
+             "btag_fixedWP_light_simple",
+             "jer",
+             "jes",
+             "jmr",
+             "jms",
+             "pileup",
+             "scalevar_7pt",
+             "Xbbtag_comb_total"
           ],
           "SCALE":1.0,
           "COLOR":"black",
@@ -109,10 +136,85 @@
           "CODE":0,
           "VAL":1.023
        },
+       "FSRPartonShower":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "ISRPartonShower":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "L1Prefiring":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "PDF_weight":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "btag_fixedWP_bc_simple":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "btag_fixedWP_light_simple":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "jer":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "jes":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "jmr":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "jms":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "pileup":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "scalevar_7pt":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
        "topxsec":{
           "CODE":1,
           "VALUP":1.061,
           "VALDOWN":0.938
+       },
+       "PDFaS_weight":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "aS_weight":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "Xbbtag_comb_total":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
        }
     },
     "OPTIONS":{
