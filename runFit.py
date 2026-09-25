@@ -86,6 +86,15 @@ FIT_OVERRIDES = {
         },
     },
 
+    ("Run2", "semiboosted", "SR_pass_toy", "1"): {
+        "setParams": {
+            "qcd_rpfT_1_par0":  "4.70",
+            "qcd_rpfT_1_par1": "-2.90",
+            "qcd_rpfT_1_par2":  "0.17",
+        },
+        "extra": "--cminDefaultMinimizerTolerance 0.01 --robustHesse 1",
+    },
+
     ("Run2", "semiboosted", "SR_pass_toy", "3"): {
         "defMinStrat": 1,
         "extra": "--cminDefaultMinimizerTolerance 0.1",
@@ -125,14 +134,16 @@ FIT_OVERRIDES = {
     },
 
     ("Run2", "combined", "SR_pass_toy", "1:1"): {
+        "defMinStrat": 0,
         "setParams": {
-            "qcd_b_rpfT_1_par0":   "6.7624302571",
-            "qcd_b_rpfT_1_par1":  "-2.8011230263",
-            "qcd_b_rpfT_1_par2":   "0.0354370388",
-            "qcd_sb_rpfT_1_par0":  "4.6950150436",
-            "qcd_sb_rpfT_1_par1": "-2.8553262242",
-            "qcd_sb_rpfT_1_par2":  "0.7527774280"
+            "qcd_b_rpfT_1_par0":   "6.80",
+            "qcd_b_rpfT_1_par1":  "-3.00",
+            "qcd_b_rpfT_1_par2":   "0.03",
+            "qcd_sb_rpfT_1_par0":  "4.5",
+            "qcd_sb_rpfT_1_par1": "-2.70",
+            "qcd_sb_rpfT_1_par2":  "0.80"
         },
+        "extra": "--cminDefaultMinimizerTolerance 0.1",
     },
 
     ("Run2", "combined", "SR_pass_toy_multiSignal", "1:1"): {
