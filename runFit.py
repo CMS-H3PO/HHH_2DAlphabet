@@ -216,6 +216,10 @@ if __name__ == '__main__':
     parser.add_argument("--dropInSituTTBarSFs", dest="dropInSituTTBarSFs", action='store_true',
                         help="Drop in-situ scale factors for ttbar Xbb mistags (default: %(default)s)",
                         default=False)
+    parser.add_argument("-e", "--extra", dest="extra",
+                        help="Extra fit options (default: %(default)s)",
+                        default="",
+                        metavar="EXTRA")
     parser.add_argument("-s", "--signals", dest="signals",
                         help="Space-separated list of signal processes (default: %(default)s)",
                         nargs="*",
@@ -237,6 +241,7 @@ if __name__ == '__main__':
     year    = options.year
     channel = options.channel
     region  = options.region
+    extra   = (" " + options.extra) if options.extra else ""
 
     if channel == "combined":
         from base.HHH_base_combination import *
@@ -327,7 +332,7 @@ if __name__ == '__main__':
                 if options.runLimits:
                     test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra="--rMin=-1 --rMax={0}".format(fit_config["rMax"]))
                 if options.runImpacts:
-                    test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"])
+                    test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=(fit_config["extra"] + extra))
 
     if channel == "combined":
         if not options.skipFTest and "multi" not in region:
