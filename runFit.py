@@ -288,6 +288,9 @@ if __name__ == '__main__':
             FIT_OVERRIDES
         )
 
+        if extra:
+            fit_config["extra"] = (fit_config["extra"] + extra)
+
         if "multi" in region:
             for sig in options.signals:
                 sig_working_area = os.path.join(working_area,sig)
@@ -332,7 +335,7 @@ if __name__ == '__main__':
                 if options.runLimits:
                     test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra="--rMin=-1 --rMax={0}".format(fit_config["rMax"]))
                 if options.runImpacts:
-                    test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=(fit_config["extra"] + extra))
+                    test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"])
 
     if channel == "combined":
         if not options.skipFTest and "multi" not in region:
