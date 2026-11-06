@@ -1,7 +1,8 @@
 FIT_DEFAULTS_SINGLE = {
     "defMinStrat": 2,
     "rMin": -5,
-    "rMax": 5
+    "rMax": 5,
+    "extra": "",
 }
 
 FIT_DEFAULTS_COMBINED = {
