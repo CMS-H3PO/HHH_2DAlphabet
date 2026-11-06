@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     if sig in SIGNAL_OVERRIDES:
                         fit_config.update(SIGNAL_OVERRIDES[sig])
 
-                    test_limit(sig_working_area,*_polyOrder,f'{sig_working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra="--rMin=-1 --rMax={0}".format(fit_config["rMax"]))
+                    test_limit(sig_working_area,*_polyOrder,f'{sig_working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"]))
 
                     print(f"\nDone processing {sig}\n")
         else:
@@ -170,7 +170,7 @@ if __name__ == '__main__':
                     test_GoF(working_area,*_polyOrder) # this waits for toy fits on Condor to finish
                     test_GoF_plot(working_area,*_polyOrder)
                 if options.runLimits:
-                    test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra="--rMin=-1 --rMax={0}".format(fit_config["rMax"]))
+                    test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"]))
                 if options.runImpacts:
                     test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"])
 
