@@ -50,10 +50,10 @@ First, define year for which you want to run the fits, e.g.
 export YEAR=Run2
 export RND_SEED=85147
 ```
-Before running fits, ttbar histograms need to be rescaled in order to retain only the shape+acceptance effect of the theory systematic uncertainties that change both the shape and normalization given the fact that the ttbar process is normalized to an experimentally measured value
+Before running fits, ttbar histograms need to be rescaled in order to retain only the shape+acceptance effect of the theory systematic uncertainties that change both the shape and normalization given the fact that the ttbar process is normalized to a more precise theory calculation of the inclusive cross section and its uncertainty
 ```
 cp -pv symlink2histograms_${YEAR}/TTbar_Histograms.root symlink2histograms_${YEAR}/TTbar_Histograms_inclNormSyst.root
-python tools/rescaleTTbarSyst.py -i symlink2histograms_${YEAR}/TTbar_Histograms.root
+python -u tools/rescaleTTbarSyst.py -i symlink2histograms_${YEAR}/TTbar_Histograms.root |& tee logs/rescaleTTbarSyst_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
 ```
 For running fits and making plots for the boosted validation region, run
 ```
