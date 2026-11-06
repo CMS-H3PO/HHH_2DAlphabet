@@ -111,8 +111,8 @@
        },
        "topxsec":{
           "CODE":1,
-          "VALUP":1.061,
-          "VALDOWN":0.938
+          "VALUP":1.045,
+          "VALDOWN":0.948
        }
     },
     "OPTIONS":{
