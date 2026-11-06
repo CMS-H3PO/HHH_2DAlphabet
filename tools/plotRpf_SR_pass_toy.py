@@ -43,16 +43,16 @@ rpf_semiboosted_SR = {}
 # Run2 boosted (best order)
 p_b["Run2"] = Pol_1()
 rpf_boosted_SR["Run2"] = ROOT.TF2("rpf_Run2_boosted_SR;m_{jjj} [GeV];m_{jj} [GeV]",p_b["Run2"],x_min,x_max,y_min,y_max,3)
-rpf_boosted_SR["Run2"].SetParameter(0, 6.7624302571)
-rpf_boosted_SR["Run2"].SetParameter(1,-2.8011230263)
-rpf_boosted_SR["Run2"].SetParameter(2, 0.0354370388)
+rpf_boosted_SR["Run2"].SetParameter(0, 6.5932121181)
+rpf_boosted_SR["Run2"].SetParameter(1,-1.9141022637)
+rpf_boosted_SR["Run2"].SetParameter(2,-0.1503004103)
 
 # Run2 semiboosted (best order)
 p_sb["Run2"] = Pol_1()
 rpf_semiboosted_SR["Run2"] = ROOT.TF2("rpf_Run2_semiboosted_SR;m_{jjj} [GeV];m_{jj} [GeV]",p_sb["Run2"],x_min,x_max,y_min,y_max,3)
-rpf_semiboosted_SR["Run2"].SetParameter(0, 4.6950150436)
-rpf_semiboosted_SR["Run2"].SetParameter(1,-2.8553262242)
-rpf_semiboosted_SR["Run2"].SetParameter(2, 0.7527774280)
+rpf_semiboosted_SR["Run2"].SetParameter(0, 4.3086934321)
+rpf_semiboosted_SR["Run2"].SetParameter(1,-1.8221489735)
+rpf_semiboosted_SR["Run2"].SetParameter(2, 0.0102885057)
 
 
 if __name__ == '__main__':
