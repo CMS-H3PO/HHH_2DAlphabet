@@ -27,7 +27,8 @@
              "scalevar_7pt",
              "topxsec",
              "PDFaS_weight",
-             "aS_weight"
+             "aS_weight",
+             "trigger"
           ],
           "SCALE":1.0,
           "COLOR":"red",
@@ -50,7 +51,8 @@
              "jms",
              "pileup",
              "scalevar_7pt",
-             "Xbbtag_comb_total"
+             "Xbbtag_comb_total",
+             "trigger"
           ],
           "SCALE":1.0,
           "COLOR":"black",
@@ -225,6 +227,11 @@
          "SIGMA":1.0
        },
        "Xbbtag_comb_total":{
+         "UP":"PATH/FILE:HIST_ALT_UP",
+         "DOWN":"PATH/FILE:HIST_ALT_DOWN",
+         "SIGMA":1.0
+       },
+       "trigger":{
          "UP":"PATH/FILE:HIST_ALT_UP",
          "DOWN":"PATH/FILE:HIST_ALT_DOWN",
          "SIGMA":1.0
