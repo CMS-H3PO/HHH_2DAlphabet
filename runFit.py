@@ -62,6 +62,11 @@ FIT_OVERRIDES = {
         },
     },
 
+    ("Run2", "boosted", "VR", "3"): {
+        "defMinStrat": 1,
+        "extra": "",
+    },
+
     ("Run2", "boosted", "VR_pass_toy", "1"): {
         "setParams": {
             "qcd_rpfT_1_par0":  "6.20",
@@ -92,7 +97,6 @@ FIT_OVERRIDES = {
             "qcd_rpfT_1_par1": "-2.90",
             "qcd_rpfT_1_par2":  "0.17",
         },
-        "extra": "--cminDefaultMinimizerTolerance 0.01 --robustHesse 1",
     },
 
     ("Run2", "semiboosted", "SR_pass_toy", "3"): {
@@ -134,14 +138,13 @@ FIT_OVERRIDES = {
     },
 
     ("Run2", "combined", "SR_pass_toy", "1:1"): {
-        "defMinStrat": 0,
         "setParams": {
-            "qcd_b_rpfT_1_par0":   "6.80",
-            "qcd_b_rpfT_1_par1":  "-3.00",
-            "qcd_b_rpfT_1_par2":   "0.03",
-            "qcd_sb_rpfT_1_par0":  "4.5",
-            "qcd_sb_rpfT_1_par1": "-2.70",
-            "qcd_sb_rpfT_1_par2":  "0.80"
+            "qcd_b_rpfT_1_par0":   "6.60",
+            "qcd_b_rpfT_1_par1":  "-2.00",
+            "qcd_b_rpfT_1_par2":  "-0.20",
+            "qcd_sb_rpfT_1_par0":  "4.50",
+            "qcd_sb_rpfT_1_par1": "-2.00",
+            "qcd_sb_rpfT_1_par2":  "0.10"
         },
         "extra": "--cminDefaultMinimizerTolerance 0.1",
     },
@@ -163,7 +166,9 @@ BESTORDER_DEFAULT_SEMIBOOSTED = "1"
 BESTORDER_DEFAULT_COMBINED    = "1:1"
 
 BESTORDER_OVERRIDES = {
-    "2017_boosted_VR": "0"
+    "2017_boosted_VR": "0",
+    "Run2_semiboosted_VR": "2",
+    "Run2_boosted_SR_pass_toy": "0"
 }
 
 SIGNAL_OVERRIDES = {
