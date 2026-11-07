@@ -159,13 +159,14 @@ FIT_OVERRIDES = {
 
     ("Run2", "combined", "SR_pass_toy_multiSignal", "1:1"): {
         "setParams": {
-            "qcd_b_rpfT_1_par0":   "6.7624302571",
-            "qcd_b_rpfT_1_par1":  "-2.8011230263",
-            "qcd_b_rpfT_1_par2":   "0.0354370388",
-            "qcd_sb_rpfT_1_par0":  "4.6950150436",
-            "qcd_sb_rpfT_1_par1": "-2.8553262242",
-            "qcd_sb_rpfT_1_par2":  "0.7527774280"
+            "qcd_b_rpfT_1_par0":   "6.60",
+            "qcd_b_rpfT_1_par1":  "-2.00",
+            "qcd_b_rpfT_1_par2":  "-0.20",
+            "qcd_sb_rpfT_1_par0":  "4.50",
+            "qcd_sb_rpfT_1_par1": "-2.00",
+            "qcd_sb_rpfT_1_par2":  "0.10"
         },
+        "extra": "--cminDefaultMinimizerTolerance 0.1",
     },
 }
 
