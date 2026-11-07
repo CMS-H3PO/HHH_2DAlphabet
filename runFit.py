@@ -139,7 +139,8 @@ if __name__ == '__main__':
                 else:
                     print(f"\nProcessing {sig}...\n")
 
-                    test_make(sig_working_area,jsonConfig)
+                    if not options.skipCreation:
+                        test_make(sig_working_area,jsonConfig)
                     test_fit(
                         sig_working_area,
                         *_polyOrder,
