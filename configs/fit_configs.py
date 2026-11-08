@@ -168,6 +168,19 @@ FIT_OVERRIDES = {
         },
         "extra": "--cminDefaultMinimizerTolerance 0.1",
     },
+
+    ("Run2", "combined", "SR_pass_toy_multiSignal_fullSyst", "1:1"): {
+        "defMinStrat": 0,
+        "setParams": {
+            "qcd_b_rpfT_1_par0":   "6.60",
+            "qcd_b_rpfT_1_par1":  "-2.00",
+            "qcd_b_rpfT_1_par2":  "-0.20",
+            "qcd_sb_rpfT_1_par0":  "4.50",
+            "qcd_sb_rpfT_1_par1": "-2.00",
+            "qcd_sb_rpfT_1_par2":  "0.10"
+        },
+        "extra": "--cminDefaultMinimizerTolerance 0.1",
+    },
 }
 
 BESTORDER_DEFAULT_BOOSTED     = "1"
