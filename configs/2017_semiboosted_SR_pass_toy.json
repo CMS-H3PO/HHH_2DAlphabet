@@ -107,7 +107,7 @@
     "SYSTEMATICS":{
        "lumi":{
           "CODE":0,
-          "VAL":1.023
+          "VAL":1.0082
        },
        "topxsec":{
           "CODE":1,
