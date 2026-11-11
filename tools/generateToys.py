@@ -1,21 +1,57 @@
 import os
 from argparse import ArgumentParser
+import ROOT
+
+
+def process_bin(ch, rnd, x_min, x_max, y_min, y_max, i, j, rpf, mjj_vs_mjjj_fail_ttbar, mjj_vs_mjjj_pass_ttbar, mjj_vs_mjjj_fail_data, mjj_vs_mjjj_pass_data):
+
+    x_center = mjj_vs_mjjj_pass_data.GetXaxis().GetBinCenter(i)
+    y_center = mjj_vs_mjjj_pass_data.GetYaxis().GetBinCenter(j)
+
+    if x_center < x_min or x_center > x_max: return
+    if y_center < y_min or y_center > y_max: return
+
+    data_fail = mjj_vs_mjjj_fail_data.GetBinContent(i,j)
+    ttbar_fail = mjj_vs_mjjj_fail_ttbar.GetBinContent(i,j)
+    ttbar_pass = mjj_vs_mjjj_pass_ttbar.GetBinContent(i,j)
+
+    qcd_fail = (data_fail - ttbar_fail)
+
+    if qcd_fail < 0.:
+        print(f'WARNING: qcd_fail_{ch} negative for (mjjj, mjj)=({x_center}, {y_center}). Manually set to 0 (data_fail_{ch}={data_fail}, ttbar_fail_{ch}={ttbar_fail})')
+        qcd_fail = 0.
+
+    qcd_pass_exp = qcd_fail * rpf.Eval(x_center, y_center)
+
+    # in case the transfer function becomes negative (it shouldn't in the phase space of interest)
+    if qcd_pass_exp < 0.:
+        print(f'WARNING: Transfer function negative for (mjjj, mjj)=({x_center}, {y_center})')
+        qcd_pass_exp = 0.
+
+    data_pass_exp = (qcd_pass_exp + ttbar_pass)
+
+    data_pass = (rnd.PoissonD(data_pass_exp) if data_pass_exp>0. else 0.)
+
+    print(f'i={i}, j={j}, x_center={x_center}, y_center={y_center}, data_fail_{ch}={data_fail}, ttbar_fail_{ch}={ttbar_fail}, ttbar_pass_{ch}={ttbar_pass}, qcd_pass_{ch}_exp={qcd_pass_exp}, data_pass_{ch}_exp={data_pass_exp}, data_pass_{ch}={data_pass}')
+
+    mjj_vs_mjjj_pass_data.SetBinContent(i,j, data_pass)
+
+    return
 
 
 def generate(year, ttbar_path, data_path, seed, region):
-    from plotRpf_VR import x_min, x_max, y_min, y_max, rpf_boosted_VR, rpf_semiboosted_VR
-    import ROOT
+    from plotRpf import x_min_b, x_max_b, y_min_b, y_max_b, x_min_sb, x_max_sb, y_min_sb, y_max_sb, rpf_boosted, rpf_semiboosted
 
-    print('Processing {0} region for {1}...\n'.format(region, year))
+    print(f'Processing {region} region for {year}...\n')
 
-    print('INFO: Random number generator seed: {0}'.format(seed))
+    print(f'INFO: Random number generator seed: {seed}')
 
     # random number generator
     rnd = ROOT.TRandom3(seed)
 
-    data_toy_file = os.path.splitext(os.path.basename(data_path))[0] + "_{0}_pass_toy.root".format(region)
+    data_toy_file = os.path.splitext(os.path.basename(data_path))[0] + f"_{region}_pass_toy.root"
     
-    cmd = "cp {0} {1}".format(data_path, data_toy_file)
+    cmd = f"cp {data_path} {data_toy_file}"
     print(cmd + '\n')
     os.system(cmd)
     
@@ -24,90 +60,38 @@ def generate(year, ttbar_path, data_path, seed, region):
     data_file = ROOT.TFile.Open(data_toy_file, 'UPDATE')
 
     # histograms: boosted
-    mjj_vs_mjjj_fail_b_ttbar = ttbar_file.Get('mjj_vs_mjjj_{0}_fail_boosted_nominal'.format(region))
-    mjj_vs_mjjj_pass_b_ttbar = ttbar_file.Get('mjj_vs_mjjj_{0}_pass_boosted_nominal'.format(region))
+    mjj_vs_mjjj_fail_b_ttbar = ttbar_file.Get(f'mjj_vs_mjjj_{region}_fail_boosted_nominal')
+    mjj_vs_mjjj_pass_b_ttbar = ttbar_file.Get(f'mjj_vs_mjjj_{region}_pass_boosted_nominal')
 
-    mjj_vs_mjjj_fail_b_data = data_file.Get('mjj_vs_mjjj_{0}_fail_boosted_nominal'.format(region))
-    mjj_vs_mjjj_pass_b_data = data_file.Get('mjj_vs_mjjj_{0}_pass_boosted_nominal'.format(region))
+    mjj_vs_mjjj_fail_b_data = data_file.Get(f'mjj_vs_mjjj_{region}_fail_boosted_nominal')
+    mjj_vs_mjjj_pass_b_data = data_file.Get(f'mjj_vs_mjjj_{region}_pass_boosted_nominal')
 
     # histograms: semiboosted
-    mjj_vs_mjjj_fail_sb_ttbar = ttbar_file.Get('mjj_vs_mjjj_{0}_fail_semiboosted_nominal'.format(region))
-    mjj_vs_mjjj_pass_sb_ttbar = ttbar_file.Get('mjj_vs_mjjj_{0}_pass_semiboosted_nominal'.format(region))
+    mjj_vs_mjjj_fail_sb_ttbar = ttbar_file.Get(f'mjj_vs_mjjj_{region}_fail_semiboosted_nominal')
+    mjj_vs_mjjj_pass_sb_ttbar = ttbar_file.Get(f'mjj_vs_mjjj_{region}_pass_semiboosted_nominal')
 
-    mjj_vs_mjjj_fail_sb_data = data_file.Get('mjj_vs_mjjj_{0}_fail_semiboosted_nominal'.format(region))
-    mjj_vs_mjjj_pass_sb_data = data_file.Get('mjj_vs_mjjj_{0}_pass_semiboosted_nominal'.format(region))
+    mjj_vs_mjjj_fail_sb_data = data_file.Get(f'mjj_vs_mjjj_{region}_fail_semiboosted_nominal')
+    mjj_vs_mjjj_pass_sb_data = data_file.Get(f'mjj_vs_mjjj_{region}_pass_semiboosted_nominal')
 
-
+    # loop over histogram bins (boosted and semiboosted histograms have the same layout)
     for i in range(1,mjj_vs_mjjj_pass_b_data.GetNbinsX() + 1):
         for j in range(1,mjj_vs_mjjj_pass_b_data.GetNbinsY() + 1):
-            
-            x_center = mjj_vs_mjjj_pass_b_data.GetXaxis().GetBinCenter(i)
-            y_center = mjj_vs_mjjj_pass_b_data.GetYaxis().GetBinCenter(j)
-            
-            if x_center < x_min or x_center > x_max: continue
-            if y_center < y_min or y_center > y_max: continue
-            
-            # boosted
-            data_fail_b = mjj_vs_mjjj_fail_b_data.GetBinContent(i,j)
-            ttbar_fail_b = mjj_vs_mjjj_fail_b_ttbar.GetBinContent(i,j)
-            ttbar_pass_b = mjj_vs_mjjj_pass_b_ttbar.GetBinContent(i,j)
-            
-            qcd_fail_b = (data_fail_b - ttbar_fail_b)
-            
-            if qcd_fail_b < 0.:
-                print('WARNING: qcd_fail_b negative for (mjjj, mjj)=({0}, {1}). Manually set to 0 (data_fail_b={2}, ttbar_fail_b={3})'.format(x_center, y_center, data_fail_b, ttbar_fail_b))
-                qcd_fail_b = 0.
 
-            qcd_pass_b_exp = qcd_fail_b * rpf_boosted_VR[year].Eval(x_center, y_center)
-            
-            # in case the transfer function becomes negative (it shouldn't in the phase space of interest)
-            if qcd_pass_b_exp < 0.:
-                print('WARNING: Boosted transfer function negative for (mjjj, mjj)=({0}, {1})'.format(x_center, y_center))
-                qcd_pass_b_exp = 0.
-            
-            data_pass_b_exp = (qcd_pass_b_exp + ttbar_pass_b)
-            
-            data_pass_b = (rnd.PoissonD(data_pass_b_exp) if data_pass_b_exp>0. else 0.)
-            
-            #print('i={0}, j={1}, x_center={2}, y_center={3}, data_fail_b={4}, ttbar_fail_b={5}, ttbar_pass_b={6}, qcd_pass_b_exp={7}, data_pass_b_exp={8}, data_pass_b={9}'.format(i, j, x_center, y_center, data_fail_b, ttbar_fail_b, ttbar_pass_b, qcd_pass_b_exp, data_pass_b_exp, data_pass_b))
-            
-            mjj_vs_mjjj_pass_b_data.SetBinContent(i,j, data_pass_b)
+            # boosted
+            process_bin('b', rnd, x_min_b, x_max_b, y_min_b, y_max_b, i, j, rpf_boosted[year]["VR"], mjj_vs_mjjj_fail_b_ttbar, mjj_vs_mjjj_pass_b_ttbar, mjj_vs_mjjj_fail_b_data, mjj_vs_mjjj_pass_b_data)
 
             # semiboosted
-            data_fail_sb = mjj_vs_mjjj_fail_sb_data.GetBinContent(i,j)
-            ttbar_fail_sb = mjj_vs_mjjj_fail_sb_ttbar.GetBinContent(i,j)
-            ttbar_pass_sb = mjj_vs_mjjj_pass_sb_ttbar.GetBinContent(i,j)
-            
-            qcd_fail_sb = (data_fail_sb - ttbar_fail_sb)
-            
-            if qcd_fail_sb < 0.:
-                print('WARNING: qcd_fail_sb negative for (mjjj, mjj)=({0}, {1}). Manually set to 0 (data_fail_sb={2}, ttbar_fail_sb={3})'.format(x_center, y_center, data_fail_sb, ttbar_fail_sb))
-                qcd_fail_sb = 0.
+            process_bin('sb', rnd, x_min_sb, x_max_sb, y_min_sb, y_max_sb, i, j, rpf_semiboosted[year]["VR"], mjj_vs_mjjj_fail_sb_ttbar, mjj_vs_mjjj_pass_sb_ttbar, mjj_vs_mjjj_fail_sb_data, mjj_vs_mjjj_pass_sb_data)
 
-            qcd_pass_sb_exp = qcd_fail_sb * rpf_semiboosted_VR[year].Eval(x_center, y_center)
-            
-            # in case the transfer function becomes negative (it shouldn't in the phase space of interest)
-            if qcd_pass_sb_exp < 0.:
-                print('WARNING: Semiboosted transfer function negative for (mjjj, mjj)=({0}, {1})'.format(x_center, y_center))
-                qcd_pass_sb_exp = 0.
-            
-            data_pass_sb_exp = (qcd_pass_sb_exp + ttbar_pass_sb)
-            
-            data_pass_sb = (rnd.PoissonD(data_pass_sb_exp) if data_pass_sb_exp>0. else 0.)
-            
-            #print('i={0}, j={1}, x_center={2}, y_center={3}, data_fail_sb={4}, ttbar_fail_sb={5}, ttbar_pass_sb={6}, qcd_pass_sb_exp={7}, data_pass_sb_exp={8}, data_pass_sb={9}'.format(i, j, x_center, y_center, data_fail_sb, ttbar_fail_sb, ttbar_pass_sb, qcd_pass_sb_exp, data_pass_sb_exp, data_pass_sb))
-            
-            mjj_vs_mjjj_pass_sb_data.SetBinContent(i,j, data_pass_sb)
-
-            # write histograms
-            data_file.cd()
-            mjj_vs_mjjj_pass_b_data.Write("", ROOT.TObject.kOverwrite)
-            mjj_vs_mjjj_pass_sb_data.Write("", ROOT.TObject.kOverwrite)
+    # write histograms
+    data_file.cd()
+    mjj_vs_mjjj_pass_b_data.Write("", ROOT.TObject.kOverwrite)
+    mjj_vs_mjjj_pass_sb_data.Write("", ROOT.TObject.kOverwrite)
 
 
     ttbar_file.Close()
     data_file.Close()
-    print('\n{0} region processing done.\n'.format(region))
+    print(f'\n{region} region processing done.\n')
 
 
 if __name__ == '__main__':
