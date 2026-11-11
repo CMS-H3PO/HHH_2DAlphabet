@@ -37,27 +37,27 @@
           "PROCESSES":[
             "TTbar"
           ],
-          "BINNING":"default"
+          "BINNING":"boosted"
        },
        "pass_boosted":{
           "PROCESSES":[
             "TTbar",
             "SIGNAME"
           ],
-          "BINNING":"default"
+          "BINNING":"boosted"
        },
        "fail_semiboosted":{
           "PROCESSES":[
             "TTbar"
           ],
-          "BINNING":"default"
+          "BINNING":"semiboosted"
        },
        "pass_semiboosted":{
           "PROCESSES":[
             "TTbar",
             "SIGNAME"
           ],
-          "BINNING":"default"
+          "BINNING":"semiboosted"
        }
     },
     "GLOBAL":{
@@ -70,11 +70,60 @@
        "FILE":"$process_Histograms.root"
     },
     "BINNING":{
-       "default":{
+       "boosted":{
           "X":{
              "NAME":"MJJJ",
              "TITLE":"M_{JJJ} [GeV]",
              "BINS":[
+                800,
+                1000,
+                1200,
+                1400,
+                1600,
+                1800,
+                2000,
+                2200,
+                2400,
+                2600,
+                2800,
+                3000,
+                3500,
+                4000,
+                4500
+            ],
+             "SIGSTART":2200,
+             "SIGEND":2600
+          },
+          "Y":{
+             "NAME":"MJJ",
+             "TITLE":"M_{JJ} [GeV]",
+             "BINS":[
+                200,
+                300,
+                400,
+                600,
+                800,
+                1000,
+                1200,
+                1400,
+                1600,
+                1800,
+                2000,
+                2500,
+                3000,
+                3500,
+                4000,
+                4500
+            ]
+          }
+       },
+       "semiboosted":{
+          "X":{
+             "NAME":"MJJJ",
+             "TITLE":"M_{JJJ} [GeV]",
+             "BINS":[
+                600,
+                800,
                 1000,
                 1200,
                 1400,

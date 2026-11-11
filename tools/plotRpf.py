@@ -2,7 +2,8 @@ import ROOT
 from argparse import ArgumentParser
 
 # variable ranges
-x_min_b = x_min_sb = 1000.
+x_min_b = 800.
+x_min_sb = 600.
 x_max_b = x_max_sb = 4500.
 y_min_b = y_min_sb = 200.
 y_max_b = y_max_sb = 4500.
