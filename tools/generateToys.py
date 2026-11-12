@@ -1,4 +1,6 @@
-import os
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from argparse import ArgumentParser
 import ROOT
 
@@ -40,7 +42,7 @@ def process_bin(ch, rnd, x_min, x_max, y_min, y_max, i, j, rpf, mjj_vs_mjjj_fail
 
 
 def generate(year, ttbar_path, data_path, seed, region):
-    from plotRpf import x_min_b, x_max_b, y_min_b, y_max_b, x_min_sb, x_max_sb, y_min_sb, y_max_sb, rpf_boosted, rpf_semiboosted
+    from configs.rpfs import x_min_b, x_max_b, y_min_b, y_max_b, x_min_sb, x_max_sb, y_min_sb, y_max_sb, rpf_boosted, rpf_semiboosted
 
     print(f'Processing {region} region for {year}...\n')
 

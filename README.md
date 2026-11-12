@@ -81,11 +81,11 @@ python tools/printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagn
 echo -e "\n\nSemiboosted VR:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `tools/plotRpf_VR.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf_VR.py -y ${YEAR}
+python tools/plotRpf.py -y ${YEAR} -r VR
 ```
-The toy data is generated using the `tools/generateToys.py` script which imports the transfer functions from `tools/plotRpf_VR.py`
+The toy data is generated using the `tools/generateToys.py` script which imports the transfer functions from `configs/rpfs.py`
 ```
 python tools/generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
 ```
@@ -106,9 +106,9 @@ python tools/printFitParameters.py -i ${YEAR}_boosted_VR_pass_toy/${BEST_B}_area
 echo -e "\n\nSemiboosted VR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `tools/plotRpf_VR_pass_toy.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf_VR_pass_toy.py -y ${YEAR}
+python tools/plotRpf.py -y ${YEAR} -r VR_pass_toy
 ```
 Note that the best polynomial order for the toy data fits might in general be different from the real data fits.
 
@@ -127,9 +127,9 @@ python tools/printFitParameters.py -i ${YEAR}_boosted_SR_pass_toy/${BEST_B}_area
 echo -e "\n\nSemiboosted SR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 python tools/printFitParameters.py -i ${YEAR}_semiboosted_SR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 ```
-The printed fit parameter values need to be put into `tools/plotRpf_SR_pass_toy.py` in order to plot the transfer functions
+The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf_SR_pass_toy.py -y ${YEAR}
+python tools/plotRpf.py -y ${YEAR} -r SR_pass_toy
 ```
 To perform the same calculations for the combination of boosted and semiboosted channels, run
 ```
