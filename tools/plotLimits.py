@@ -3,6 +3,7 @@ import json
 import sys
 from TwoDAlphabet.ext import CMS_lumi
 from os.path import isfile, join, basename, normpath
+from pathlib import Path
 from argparse import ArgumentParser
 
 # Credits: Claude AI
@@ -137,7 +138,7 @@ def getLegendLabels(legends, inputs, ratio):
     return names
 
 
-def makePlot(inputs, fit_area, year, config, plotDimension, m_X, m_Y, logY, minY, maxY, logZ, minZ, maxZ, ratio, legends, output):
+def makePlot(inputs, fit_area, year, config, plotDimension, m_X, m_Y, logY, minY, maxY, logZ, minZ, maxZ, ratio, legends, output, extensions):
 
     limits = []
     for inputDir in inputs:
@@ -258,7 +259,12 @@ def makePlot(inputs, fit_area, year, config, plotDimension, m_X, m_Y, logY, minY
     CMS_lumi.lumiTextSize = 0.4
     CMS_lumi.CMS_lumi(c, 1, 11)
 
-    c.SaveAs(output)
+    # if requested, save the output file in more than one format
+    suffix = Path(output).suffix
+    if suffix not in extensions:
+        extensions.append(suffix)
+    for ext in extensions:
+        c.SaveAs(str(Path(output).with_suffix('').with_suffix(ext)))
     c.Close()
 
 
@@ -378,6 +384,12 @@ if __name__ == '__main__':
                         type=float,
                         metavar="Z_MAX")
 
+    parser.add_argument("--ext", dest="ext",
+                        help="Output file extension(s) i.e. format(s) in which it should be saved (default: %(default)s)",
+                        nargs='*',
+                        default=[".pdf", ".png"],
+                        metavar="EXT")
+
     options = parser.parse_args()
 
     inputs  = options.input
@@ -390,6 +402,8 @@ if __name__ == '__main__':
     maxZ    = options.maxZ
     ratio   = options.ratio
     legends = options.legend
+    output  = options.output
+    ext     = options.ext
 
     if len(inputs) == 0:
         print("Warning: At least one input folder has to be specified")
@@ -433,4 +447,4 @@ if __name__ == '__main__':
         config = json.load(json_file)
 
     makePlot(inputs, options.fit_area, year, config, plotDimension, mX, mY, options.logY,
-             minY, maxY, options.logZ, minZ, maxZ, ratio, legends, options.output)
+             minY, maxY, options.logZ, minZ, maxZ, ratio, legends, output, ext)
