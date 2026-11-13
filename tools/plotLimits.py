@@ -4,7 +4,7 @@ import sys
 from TwoDAlphabet.ext import CMS_lumi
 from os.path import isfile, join, basename, normpath
 from pathlib import Path
-from argparse import ArgumentParser
+from argparse import ArgumentParser, BooleanOptionalAction
 
 # Credits: Claude AI
 
@@ -368,8 +368,8 @@ if __name__ == '__main__':
                         type=float,
                         metavar="Y_MAX")
 
-    parser.add_argument("--logZ", dest="logZ", action='store_true',
-                        help="Sets log scale for Z-axis of 2D plots (default: %(default)s)",
+    parser.add_argument("--logZ", dest="logZ", action=BooleanOptionalAction,
+                        help="Sets log scale for Z-axis of 2D plots (default: %(default)s). Use --no-logZ to disable it.",
                         default=True)
 
     parser.add_argument("--minZ", dest="minZ",
