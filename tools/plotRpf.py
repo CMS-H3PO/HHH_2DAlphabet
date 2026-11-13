@@ -23,8 +23,9 @@ if __name__ == '__main__':
                         choices=["VR", "VR_pass_toy", "SR_pass_toy"],
                         metavar="REGION")
     parser.add_argument("--ext", dest="ext",
-                        help="Output file extension (i.e. format) (default: %(default)s)",
-                        default="png",
+                        help="Output file extension(s) i.e. format(s) in which it should be saved (default: %(default)s)",
+                        nargs='*',
+                        default=[".pdf", ".png"],
                         metavar="EXT")
 
     (options, args) = parser.parse_known_args()
@@ -49,9 +50,9 @@ if __name__ == '__main__':
     c.cd()
 
     rpf_boosted[year][region].Draw("colz")
-
-    c.SaveAs(f"rpf_{year}_boosted_{region}.{ext}")
+    for e in ext:
+        c.SaveAs(f"rpf_{year}_boosted_{region}{e}")
 
     rpf_semiboosted[year][region].Draw("colz")
-
-    c.SaveAs(f"rpf_{year}_semiboosted_{region}.{ext}")
+    for e in ext:
+        c.SaveAs(f"rpf_{year}_semiboosted_{region}{e}")
