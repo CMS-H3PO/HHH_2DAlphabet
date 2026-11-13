@@ -196,7 +196,7 @@ FIT_OVERRIDES = {
     },
 
     ("Run2", "combined", "SR_pass_toy_fullSyst", "1:1"): {
-        "defMinStrat": 0,
+        "defMinStrat": 1,
         "setParams": {
             "qcd_b_rpfT_1_par0":   "5.80",
             "qcd_b_rpfT_1_par1":   "0.10",
@@ -205,7 +205,6 @@ FIT_OVERRIDES = {
             "qcd_sb_rpfT_1_par1": "-4.40",
             "qcd_sb_rpfT_1_par2":  "1.00"
         },
-        "extra": "--cminDefaultMinimizerTolerance 0.1",
     },
 
     ("Run2", "combined", "SR_pass_toy_multiSignal", "1:1"): {
