@@ -24,7 +24,7 @@ if __name__ == '__main__':
                         choices=["boosted", "semiboosted", "combined"],
                         metavar="CHANNEL")
     parser.add_argument("-r", "--region", dest="region",
-                        help="Analysis region (e.g. VR, VR_pass_toy, SR, SR_pass_toy, SR_pass_toy_multiSignal)",
+                        help="Analysis region (e.g. VR, VR_pass_toy, SR, SR_pass_toy, SR_pass_toy)",
                         required=True,
                         metavar="REGION")
     parser.add_argument("-p", "--polyOrders", dest="polyOrders",
@@ -62,6 +62,12 @@ if __name__ == '__main__':
                         nargs="*",
                         choices=SIGNAL_NAMES,
                         default=SIGNAL_NAMES)
+    parser.add_argument("--multi", dest="multi", action="store_true",
+                        help="Run in multi-signal mode (default: %(default)s)",
+                        default=False)
+    parser.add_argument("--syst", dest="syst", action="store_true",
+                        help="Enable systematics i.e. float nuisance parameters in limit computation (default: %(default)s)",
+                        default=False)
     parser.add_argument("--condor", dest="condor", action="store_true",
                         help="Submit Condor jobs (default: %(default)s)",
                         default=False)
@@ -79,6 +85,7 @@ if __name__ == '__main__':
     channel = options.channel
     region  = options.region
     extra   = (" " + options.extra) if options.extra else ""
+    multi   = (options.multi or len(options.signals)>1)
 
     if channel == "combined":
         from base.HHH_base_combination import *
@@ -86,6 +93,7 @@ if __name__ == '__main__':
         BESTORDER_DEFAULT  = BESTORDER_DEFAULT_COMBINED
         options.polyOrders = [BESTORDER_DEFAULT_COMBINED]
         options.skipFTest  = True
+        jsonConfig = 'configs/combined.json'
     else:
         from base.HHH_base_singleChannel import *
         FIT_DEFAULTS          = FIT_DEFAULTS_SINGLE
@@ -93,19 +101,34 @@ if __name__ == '__main__':
             BESTORDER_DEFAULT = BESTORDER_DEFAULT_BOOSTED
         else:
             BESTORDER_DEFAULT = BESTORDER_DEFAULT_SEMIBOOSTED
+        jsonConfig = 'configs/single.json'
 
-    working_area = f"{year}_{channel}_{region}"
+    yearDict = {
+        "2017": 17,
+        "Run2": 2
+    }
+
+    findReplace = {
+        "HIST":      "mjj_vs_mjjj_{0}R_$region{1}_nominal".format(region[0], f"_{channel}" if channel!="combined" else ""),
+        "HIST_UP":   "mjj_vs_mjjj_{0}R_$region{1}_$systUp".format(region[0], f"_{channel}" if channel!="combined" else ""),
+        "HIST_DOWN": "mjj_vs_mjjj_{0}R_$region{1}_$systDown".format(region[0], f"_{channel}" if channel!="combined" else ""),
+        "CHANNEL":   f"{channel}",
+        "DATAFILE":  "JetHT_Histograms{0}.root".format(f"_{region}" if "pass_toy" in region else ""),
+        "SIGNAME":   options.signals,
+        "YEAR":      yearDict[year]
+    }
+
+    suffix = ("_multiSignal" if multi else "") + ("_syst" if options.syst else "")
+    working_area = f"{year}_{channel}_{region}{suffix}"
     bestOrder = {working_area:BESTORDER_DEFAULT}
     if working_area in BESTORDER_OVERRIDES:
         bestOrder[working_area] = BESTORDER_OVERRIDES[working_area]
 
-    jsonConfig = f'configs/{working_area}.json'
-
-    if not options.skipCreation and "multi" not in region:
-        test_make(working_area,jsonConfig)
+    if not options.skipCreation and not multi:
+        test_make(working_area,jsonConfig,findreplace=findReplace)
 
     for polyOrder in options.polyOrders:
-        if "multi" in region and polyOrder != bestOrder[working_area]:
+        if multi and polyOrder != bestOrder[working_area]:
             continue
 
         if channel == "combined":
@@ -128,7 +151,7 @@ if __name__ == '__main__':
         if extra:
             fit_config["extra"] = (fit_config["extra"] + extra)
 
-        if "multi" in region:
+        if multi:
             for sig in options.signals:
                 sig_working_area = os.path.join(working_area,sig)
                 os.makedirs(sig_working_area,exist_ok=True)
@@ -140,7 +163,8 @@ if __name__ == '__main__':
                     print(f"\nProcessing {sig}...\n")
 
                     if not options.skipCreation:
-                        test_make(sig_working_area,jsonConfig,findreplace={"SIGNAME":[sig]})
+                        findReplace["SIGNAME"] = [sig]
+                        test_make(sig_working_area,jsonConfig,findreplace=findReplace)
                     test_fit(
                         sig_working_area,
                         *_polyOrder,
@@ -152,7 +176,11 @@ if __name__ == '__main__':
                     if sig in SIGNAL_OVERRIDES:
                         fit_config.update(SIGNAL_OVERRIDES[sig])
 
-                    test_limit(sig_working_area,*_polyOrder,f'{sig_working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"]))
+                    extra = fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"])
+                    if options.syst and "--freezeParameters allConstrainedNuisances" in extra:
+                        extra.replace("--freezeParameters allConstrainedNuisances", "")
+
+                    test_limit(sig_working_area,*_polyOrder,f'{sig_working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=extra)
 
                     print(f"\nDone processing {sig}\n")
         else:
@@ -171,12 +199,15 @@ if __name__ == '__main__':
                     test_GoF(working_area,*_polyOrder) # this waits for toy fits on Condor to finish
                     test_GoF_plot(working_area,*_polyOrder)
                 if options.runLimits:
-                    test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"]))
+                    extra = fit_config["extra"] + " --rMin=-1 --rMax={0}".format(fit_config["rMax"])
+                    if options.syst and "--freezeParameters allConstrainedNuisances" in extra:
+                        extra.replace("--freezeParameters allConstrainedNuisances", "")
+                    test_limit(working_area,*_polyOrder,f'{working_area}/runConfig.json',blind=True,defMinStrat=fit_config["defMinStrat"],extra=extra)
                 if options.runImpacts:
                     test_Impacts(working_area,*_polyOrder,rMin=fit_config["rMin"],rMax=fit_config["rMax"],defMinStrat=fit_config["defMinStrat"],extra=fit_config["extra"])
 
     if channel == "combined":
-        if not options.skipFTest and "multi" not in region:
+        if not options.skipFTest and not multi:
             test_FTest(["0","0"],["0","1"])
             test_FTest(["0","0"],["1","0"])
             test_FTest(["0","1"],["1","1"])
@@ -186,7 +217,7 @@ if __name__ == '__main__':
             test_FTest(["2","1"],["2","2"])
             test_FTest(["1","2"],["2","2"])
     else:
-        if not options.skipFTest and "multi" not in region:
+        if not options.skipFTest and not multi:
             test_FTest(working_area,"0","1")
             test_FTest(working_area,"1","2")
             test_FTest(working_area,"2","3")
