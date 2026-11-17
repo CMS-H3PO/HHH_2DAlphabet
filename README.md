@@ -55,19 +55,20 @@ Before running fits, ttbar histograms need to be rescaled in order to retain onl
 cp -pv symlink2histograms_${YEAR}/TTbar_Histograms.root symlink2histograms_${YEAR}/TTbar_Histograms_inclNormSyst.root
 python -u tools/rescaleTTbarSyst.py -i symlink2histograms_${YEAR}/TTbar_Histograms.root |& tee logs/rescaleTTbarSyst_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
 ```
+## Validation region fits
 For running fits and making plots for the boosted validation region, run
 ```
-python -u runFit.py -y ${YEAR} -c boosted -r VR |& tee logs/${YEAR}_boosted_VR_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c boosted -r VR -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_boosted_VR_`date "+%Y%m%d_%H%M%S"`.log
 ```
 To do the same for the semiboosted validation region, run
 ```
-python -u runFit.py -y ${YEAR} -c semiboosted -r VR |& tee logs/${YEAR}_semiboosted_VR_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c semiboosted -r VR -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_semiboosted_VR_`date "+%Y%m%d_%H%M%S"`.log
 ```
 To perform the same for the combination of boosted and semiboosted channels, run
 ```
-python -u runFit.py -y ${YEAR} -c combined -r VR |& tee logs/${YEAR}_combined_VR_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c combined -r VR -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_combined_VR_`date "+%Y%m%d_%H%M%S"`.log
 ```
-Note that piping output to the `tee` command will both print it to the terminal and save it in a log file. The log file name will contain a timestamp.
+Some of the fit options and parameters might require some fine tuning. These are all defined in `configs/fit_configs.py`. Note that piping output to the `tee` command will both print it to the terminal and save it in a log file. The log file name will contain a timestamp.
 
 Now set the best polynomial orders for `Run2`
 ```
@@ -77,63 +78,69 @@ export BEST_SB=1
 To calculate expected limits, we first need to generate toy data in the pass category of the signal regions. For this we use the pass-to-fail transfer functions (Rpf) obtained from the validation region fits. First, we need to extract the fit parameter values, which can be done using the following commands
 ```
 echo -e "Boosted VR:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_boosted_VR/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted VR:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_semiboosted_VR/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_`date "+%Y%m%d"`.log
 ```
 The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf.py -y ${YEAR} -r VR
+python -u tools/plotRpf.py -y ${YEAR} -r VR
 ```
 The toy data is generated using the `tools/generateToys.py` script which imports the transfer functions from `configs/rpfs.py`
 ```
-python tools/generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
+python -u tools/generateToys.py -y ${YEAR} -s ${RND_SEED} -t symlink2histograms_${YEAR}/TTbar_Histograms.root -d symlink2histograms_${YEAR}/JetHT_Histograms.root |& tee logs/generateToys_${YEAR}_`date "+%Y%m%d"`.log
 ```
 Two output files are produced, `JetHT_Histograms_VR_pass_toy.root` with the toy data in the pass category of the validation regions and `JetHT_Histograms_SR_pass_toy.root` with the toy data in the pass category of the signal regions. These files need to be moved to the same folder with the other histogram files
 ```
 mv -v JetHT_Histograms_*_pass_toy.root symlink2histograms_${YEAR}
 ```
+<details>
+<summary>Optional. Click to expand</summary>
+
+## Validation region toy data fits
 The toy data in the validation regions is used as a sort of sanity check that the toy data fits also converge
 ```
-python -u runFit.py -y ${YEAR} -c boosted -r VR_pass_toy |& tee logs/${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
-python -u runFit.py -y ${YEAR} -c semiboosted -r VR_pass_toy |& tee logs/${YEAR}_semiboosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
-python -u runFit.py -y ${YEAR} -c combined -r VR_pass_toy |& tee logs/${YEAR}_combined_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c boosted -r VR_pass_toy -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_boosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c semiboosted -r VR_pass_toy -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_semiboosted_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c combined -r VR_pass_toy -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_combined_VR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
 The Rpf parameter values can be printed with the following commands
 ```
 echo -e "Boosted VR pass toy:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_boosted_VR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_boosted_VR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted VR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_semiboosted_VR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_semiboosted_VR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_VR_pass_toy_`date "+%Y%m%d"`.log
 ```
 The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf.py -y ${YEAR} -r VR_pass_toy
+python -u tools/plotRpf.py -y ${YEAR} -r VR_pass_toy
 ```
 Note that the best polynomial order for the toy data fits might in general be different from the real data fits.
+</details>
 
+## Signal region toy data fits
 To perform the same checks for the signal region fits and calculate expected limits for the benchmark XToYHTo6B_MX-2500_MY-800 case for the boosted channel, run
 ```
-python -u runFit.py -y ${YEAR} -c boosted -r SR_pass_toy --runLimits |& tee logs/${YEAR}_boosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c boosted -r SR_pass_toy --runLimits -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_boosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
 To do the same for the semiboosted channel, run
 ```
-python -u runFit.py -y ${YEAR} -c semiboosted -r SR_pass_toy --runLimits |& tee logs/${YEAR}_semiboosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c semiboosted -r SR_pass_toy --runLimits -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_semiboosted_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
 The Rpf parameter values can be printed with the following commands
 ```
 echo -e "Boosted SR pass toy:\nOrder ${BEST_B} (best)" |& tee logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_boosted_SR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_boosted_SR_pass_toy/${BEST_B}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 echo -e "\n\nSemiboosted SR pass toy:\nOrder ${BEST_SB} (best)" |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
-python tools/printFitParameters.py -i ${YEAR}_semiboosted_SR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
+python -u tools/printFitParameters.py -i ${YEAR}_semiboosted_SR_pass_toy/${BEST_SB}_area/fitDiagnosticsTest.root |& tee -a logs/printFitParameters_${YEAR}_SR_pass_toy_`date "+%Y%m%d"`.log
 ```
 The printed fit parameter values need to be put into `configs/rpfs.py` in order to plot the transfer functions
 ```
-python tools/plotRpf.py -y ${YEAR} -r SR_pass_toy
+python -u tools/plotRpf.py -y ${YEAR} -r SR_pass_toy
 ```
 To perform the same calculations for the combination of boosted and semiboosted channels, run
 ```
-python -u runFit.py -y ${YEAR} -c combined -r SR_pass_toy --runLimits |& tee logs/${YEAR}_combined_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
+python -u runFit.py -y ${YEAR} -c combined -r SR_pass_toy --runLimits -s XToYHTo6B_MX-2500_MY-800 -e "--freezeParameters allConstrainedNuisances" |& tee logs/${YEAR}_combined_SR_pass_toy_`date "+%Y%m%d_%H%M%S"`.log
 ```
 To calculate expected limits for multiple signal samples for the boosted channel, run
 ```
@@ -149,5 +156,5 @@ python -u runFit.py -y ${YEAR} -c combined -r SR_pass_toy_multiSignal --condor
 ```
 Finally, to produce the expected limit plots, run
 ```
-python -u tools/plotLimits.py -y ${YEAR} --minZ 0.1 --maxZ 1000 |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
+python -u tools/plotLimits.py -y ${YEAR} --minZ 0.1 --maxZ 1000 -i ./${YEAR}_combined_SR_pass_toy_multiSignal/ -f 1-b_1-sb_area -o ${YEAR}_combined_expected_limits_2D.png |& tee logs/plotLimits_${YEAR}_`date "+%Y%m%d_%H%M%S"`.log
 ```
