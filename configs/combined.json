@@ -26,7 +26,6 @@
              "pileup",
              "scalevar_7pt",
              "topxsec",
-             "PDFaS_weight",
              "aS_weight",
              "trigger"
           ],
@@ -256,11 +255,6 @@
           "CODE":1,
           "VALUP":1.045,
           "VALDOWN":0.948
-       },
-       "PDFaS_weight":{
-         "UP":"PATH/FILE:HIST_UP",
-         "DOWN":"PATH/FILE:HIST_DOWN",
-         "SIGMA":1.0
        },
        "aS_weight":{
          "UP":"PATH/FILE:HIST_UP",
