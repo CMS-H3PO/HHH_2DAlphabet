@@ -381,8 +381,8 @@ def test_FTest(working_area,orders1,orders2):
 
     twoD    = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
 
-    binning_b  = twoD.binnings["default"]
-    binning_sb = twoD.binnings["default"]
+    binning_b  = twoD.binnings["boosted"]
+    binning_sb = twoD.binnings["semiboosted"]
     nBins   = (len(binning_b.xbinList)-1)*(len(binning_b.ybinList)-1)+(len(binning_sb.xbinList)-1)*(len(binning_sb.ybinList)-1)
 
     #Get number of RPF params and run GoF for orders1

@@ -307,7 +307,7 @@ def test_FTest(working_area,poly1,poly2):
 
     twoD    = TwoDAlphabet(working_area, '%s/runConfig.json'%working_area, loadPrevious=True)
 
-    binning = twoD.binnings["default"]
+    binning = twoD.binnings[working_area.split('_')[1]]
     nBins   = (len(binning.xbinList)-1)*(len(binning.ybinList)-1)
 
     #Get number of RPF params and run GoF for poly1
